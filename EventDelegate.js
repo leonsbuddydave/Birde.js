@@ -64,20 +64,12 @@ EventDelegate =
 	},
 	HandleLiveEvent : function(EventObject)
 	{
+		var MatchingEvents = EventDelegate.EventRegistries[EventObject.type];
 		//console.log("Handling live event: ", EventObject.type);
-		for (var Object in EventDelegate.EventRegistries[EventObject.type])
+		for (var Object in MatchingEvents)
 		{
 			// Fire each objects event, passing it the event object
-			EventDelegate.EventRegistries[EventObject.type][Object].Events[EventObject.type](EventDelegate.EventRegistries[EventObject.type][Object], EventObject);
-		}
-	},
-	Fire : function(EventObject)
-	{
-		// Loop through all objects in our event registry
-		for (var Object in EventDelegate.EventRegistries[EventObject.type])
-		{
-			// Fire each objects event, passing it the event object
-			EventDelegate.EventRegistries[EventObject.type][Object].Events[EventObject.type](EventDelegate.EventRegistries[EventObject.type][Object], EventObject);
+			MatchingEvents[Object].Events[EventObject.type](MatchingEvents[Object], EventObject);
 		}
 	},
 	EventRegistries :
