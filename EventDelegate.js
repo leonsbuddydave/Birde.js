@@ -1,15 +1,3 @@
-EVENT = {
-	CLICK : "click",
-	MOUSEDOWN : "mousedown",
-	MOUSEUP : "mouseup",
-	MOUSEOVER : "mouseover",
-	MOUSEOUT : "mouseout",
-	MOUSEMOVE : "mousemove",
-	KEYUP : "keyup",
-	KEYDOWN : "keydown",
-	KEYPRESS : "keypress"
-}
-
 EventDelegate = 
 {
 	EventShield : null,
@@ -76,7 +64,7 @@ EventDelegate =
 	},
 	HandleLiveEvent : function(EventObject)
 	{
-		console.log("Handling live event: ", EventObject.type);
+		//console.log("Handling live event: ", EventObject.type);
 		for (var Object in EventDelegate.EventRegistries[EventObject.type])
 		{
 			// Fire each objects event, passing it the event object
@@ -86,10 +74,10 @@ EventDelegate =
 	Fire : function(EventObject)
 	{
 		// Loop through all objects in our event registry
-		for (var Object in this.EventRegistries[EventObject.type])
+		for (var Object in EventDelegate.EventRegistries[EventObject.type])
 		{
 			// Fire each objects event, passing it the event object
-			this.EventRegistries[EventObject.type][Object].Events[EventObject.type](EventObject);
+			EventDelegate.EventRegistries[EventObject.type][Object].Events[EventObject.type](EventDelegate.EventRegistries[EventObject.type][Object], EventObject);
 		}
 	},
 	EventRegistries :

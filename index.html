@@ -1,27 +1,42 @@
 <html>
 	<head>
+		<script type="text/javascript" src="Enum.js"></script>
 		<script type="text/javascript" src="Graphics.js"></script>
+		<script type="text/javascript" src="Inheritance.js"></script>
 		<script type="text/javascript" src="WorldObject.js"></script>
 		<script type="text/javascript" src="EventDelegate.js"></script>
 		<script type="text/javascript" src="Game.js"></script>
+		<script type="text/javascript" src="Debug.js"></script>
 	</head>
 	<body>
 		<canvas id="GameScreen" width="800" height="600">Canvas not supported.</canvas>
 		<script type="text/javascript">
-			// Simple, static object
-			var WO = NewWorldObject();
-			Game.World.Add( WO );
+			Ball = WorldObject.Extend(
+				{
+					Update : function(me, dt)
+					{
+						me.Position.x += 10 * dt;
+					}
+				}
+			);
 			
-			// Responsive object
-			var OWO = NewWorldObject();
-			OWO.Position.z = 4;
-			OWO.Position.x = 30;
-			OWO.Position.y = 30;
-			OWO.Events.click = function(Me, Event)
-			{
-				Me.Position.x += 10;
-			}
-			Game.World.Add( OWO );
+			OtherBall = Ball.Extend(
+				{
+					Events :
+					{
+						click : function(me, evt)
+						{
+							me.Position.y += 10;
+						}
+					}
+				}
+			);
+			
+			var MyBall = Ball.New();
+			var MySecondBall = OtherBall.New();
+			
+			Game.World.Add(MyBall);
+			Game.World.Add(MySecondBall);
 			
 			Game.Start("GameScreen");
 		</script>
