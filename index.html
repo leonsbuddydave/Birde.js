@@ -13,6 +13,7 @@
 		<script type="text/javascript">
 			Ball = WorldObject.Extend(
 				{
+					Class : "Ball",
 					Update : function(me, dt)
 					{
 						me.Position.x += 10 * dt;
@@ -22,6 +23,7 @@
 			
 			OtherBall = Ball.Extend(
 				{
+					Class : "OtherBall",
 					Events :
 					{
 						click : function(me, evt)
@@ -35,8 +37,7 @@
 			var MyBall = Ball.New();
 			var MySecondBall = OtherBall.New();
 			
-			Game.World.Add(MyBall);
-			Game.World.Add(MySecondBall);
+			Game.World.Add(MyBall, MySecondBall);
 			
 			Game.Start("GameScreen");
 		</script>

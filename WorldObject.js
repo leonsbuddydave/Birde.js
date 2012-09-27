@@ -24,13 +24,13 @@ WorldObject =
 	
 	Position:
 	{
-		type: POSITION_TYPE.World,
 		x : 0,
 		y : 0,
 		z : 0 // Used for object layering
 	},
 	
-	Children : [], // Children of this node are tied to it and will die when it does
+	// Children of this node are tied to it and will die when it does
+	Children : [],
 	
 	/*
 		Update event is undefined for a blank world object - must be overridden by subclasses
@@ -38,9 +38,8 @@ WorldObject =
 	*/
 	Update: function(Me, dt) {
 		// Called every step
-		console.log("WorldObject's update method.");
+		console.log("Update method not overridden - what the fuck do you think you'll get done with this?");
 	},
-	
 	
 	/*
 		Draw event, by default, loads a sprite if it hasn't been overriden by a child object.
@@ -53,13 +52,7 @@ WorldObject =
 			this.Data.Sprite = new Image();
 			this.Data.Sprite.src = 'assets/red_ball.png';
 		}
-		
 		Context.drawImage(this.Data.Sprite, this.Position.x, this.Position.y);
-	},
-	
-	AddEvent: function(EventName, EventActions)
-	{
-		this.Events[EventName] = EventActions;
 	},
 	
 	Events:

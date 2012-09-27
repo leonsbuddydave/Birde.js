@@ -15,17 +15,30 @@ Game = {
 	Settings :
 	{
 		FPS : 60,
+		TargetCanvasID : null
 	},
+	
 	Setup : function(TargetCanvasID)
 	{
 		Graphics.SetupCanvas(TargetCanvasID);
 		EventDelegate.Initialize(TargetCanvasID);
+		return this;
 	},
+	
 	Start : function(TargetCanvasID)
 	{
 		// If debugging is turned off, just get rid of console.log completely
 		if (!DEBUG)
-			console.log = function(){};
+			console.log = function(){ /* This function does nothing */ };
+			
+		if (typeof TargetCanvasID == 'undefined' || TargetCanvasID == null)
+			if (typeof this.Settings.TargetCanvasID == 'undefined' || this.Settings.TargetCanvasID == null)
+				return null;
+			else
+				TargetCanvasID = this.Settings.TargetCanvasID;
+		else
+			this.Settings.TargetCanvasID = TargetCanvasID;
+		
 		
 		console.log("Starting engine.");
 		
@@ -35,10 +48,13 @@ Game = {
 		// Start the game loop
 		this.Running = true;
 		this.Update( 0 );
+		return this;
 	},
+	
 	Stop : function()
 	{
 		this.Running = false;
+		return this;
 	},
 	World : 
 	{
@@ -61,13 +77,19 @@ Game = {
 				
 			this.ClassIndex[Obj.Class].push( Obj );
 		},
-		Add : function(Obj)
+		Add : function()
 		{
-			// Registers an object for events and then pushes it onto the scene graph
-			EventDelegate.RegisterObject( Obj );
-			this.RegisterClass( Obj );
-			this.SceneGraph.push( Obj );			
-			this.SceneGraph.sort(this.ZCompare);
+			if (arguments.length == 0)
+				return this;
+			for (var obj in arguments)
+			{
+				// Registers an object for events and then pushes it onto the scene graph
+				EventDelegate.RegisterObject( arguments[obj] );
+				this.RegisterClass( arguments[obj] );
+				this.SceneGraph.push( arguments[obj] );
+				this.SceneGraph.sort(this.ZCompare);
+			}
+			return this;
 		},
 		ZCompare : function(a, b)
 		{

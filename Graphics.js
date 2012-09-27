@@ -10,6 +10,7 @@ Graphics =
 	},
 	Width : null,
 	Height: null,
+	
 	/*
 		ContextCache stores all the layers that things will be drawn on
 		It's an object instead of an array because all intervening layers may not
@@ -30,7 +31,6 @@ Graphics =
 	/*
 		This method clears all the buffers each frame.
 	*/	
-	
 	Clear : function()
 	{
 		this.ContextCache[0].fillStyle = this.Flags.CLEARCOLOR;
