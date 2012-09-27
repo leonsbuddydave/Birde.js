@@ -69,8 +69,25 @@ EventDelegate =
 		for (var Object in MatchingEvents)
 		{
 			// Fire each objects event, passing it the event object
-			MatchingEvents[Object].Events[EventObject.type](MatchingEvents[Object], EventObject);
+			MatchingEvents[Object].Events[EventObject.type](MatchingEvents[Object], EventDelegate.ConvertEvent(EventObject));
 		}
+	},
+	ConvertEvent : function(e)
+	{
+		var ev = {};
+		
+		ev.Alt = e.altKey;
+		ev.Ctrl = e.ctrlKey;
+		ev.Meta = e.metaKey;
+		ev.Shift = e.shiftKey;
+		ev.MouseButton = e.button;
+		ev.CharCode = e.charCode;
+		ev.KeyCode = e.keyCode;
+		ev.x = e.offsetX;
+		ev.y = e.offsetY;
+		ev.Type = e.type;
+		
+		return ev;
 	},
 	EventRegistries :
 	{

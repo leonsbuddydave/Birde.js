@@ -22,12 +22,11 @@ WorldObject =
 	
 	Class: "GENERIC",
 	
-	Position:
-	{
-		x : 0,
-		y : 0,
-		z : 0 // Used for object layering
-	},
+	Me : this,
+
+	x : 0,
+	y : 0,
+	z : 0, // Used for object layering
 	
 	// Children of this node are tied to it and will die when it does
 	Children : [],
@@ -52,17 +51,17 @@ WorldObject =
 			this.Data.Sprite = new Image();
 			this.Data.Sprite.src = 'assets/red_ball.png';
 		}
-		Context.drawImage(this.Data.Sprite, this.Position.x, this.Position.y);
+		Context.drawImage(this.Data.Sprite, this.x - this.Data.Sprite.width / 2, this.y - this.Data.Sprite.height / 2);
 	},
 	
 	Events:
 	{
-		me : this
+
 	},
 	
 	Reactions:
 	{
-		me : this
+
 	},
 	
 	Data: {} // Data object is used for any miscellaneous data storage

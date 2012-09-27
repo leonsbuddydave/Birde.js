@@ -1,10 +1,12 @@
 <html>
 	<head>
+		<script type="text/javascript" src="Math.js"></script>
 		<script type="text/javascript" src="Enum.js"></script>
 		<script type="text/javascript" src="Graphics.js"></script>
 		<script type="text/javascript" src="Inheritance.js"></script>
 		<script type="text/javascript" src="WorldObject.js"></script>
 		<script type="text/javascript" src="EventDelegate.js"></script>
+		<script type="text/javascript" src="World.js"></script>
 		<script type="text/javascript" src="Game.js"></script>
 		<script type="text/javascript" src="Debug.js"></script>
 	</head>
@@ -16,7 +18,7 @@
 					Class : "Ball",
 					Update : function(me, dt)
 					{
-						me.Position.x += 10 * dt;
+						me.x += 30 * dt;
 					}
 				}
 			);
@@ -26,10 +28,22 @@
 					Class : "OtherBall",
 					Events :
 					{
-						click : function(me, evt)
+						click : function(Me, Evt)
 						{
-							me.Position.y += 10;
+							var mouseSlope = Math.slope(Me.x, Me.y, Evt.x, Evt.y);
+							Me.Data.deltaX = mouseSlope.x;
+							Me.Data.deltaY = mouseSlope.y;
 						}
+					},
+					Update : function(Me, dt)
+					{
+						Me.x += Me.Data.deltaX * dt;
+						Me.y += Me.Data.deltaY * dt;
+					},
+					Data :
+					{
+						deltaX : 1,
+						deltaY : 1
 					}
 				}
 			);
@@ -37,7 +51,7 @@
 			var MyBall = Ball.New();
 			var MySecondBall = OtherBall.New();
 			
-			Game.World.Add(MyBall, MySecondBall);
+			World.Add(MyBall, MySecondBall);
 			
 			Game.Start("GameScreen");
 		</script>

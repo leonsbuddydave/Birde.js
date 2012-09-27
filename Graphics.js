@@ -2,7 +2,7 @@ Graphics =
 {
 	Flags :
 	{
-		CLEARCOLOR : "#fff"
+		CLEARCOLOR : "#555"
 	},
 	SetFlag : function(flag, value)
 	{
