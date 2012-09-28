@@ -15,3 +15,9 @@ EVENT = {
 	KEYDOWN : "keydown",
 	KEYPRESS : "keypress"
 }
+
+CollisionType =
+{
+	BOX : 0,
+	CIRCLE : 1
+}

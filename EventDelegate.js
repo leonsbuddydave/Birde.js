@@ -13,6 +13,7 @@ EventDelegate =
 		
 		var EventShield = this.CreateEventShield(EventElement);
 		EventShield.tabIndex = -1;
+		EventShield.onselectstart = function(){};
 		
 			
 		// Register element for all supported events, to be handled by HandleLiveEvent
@@ -64,6 +65,7 @@ EventDelegate =
 	},
 	HandleLiveEvent : function(EventObject)
 	{
+		arguments[0].preventDefault();
 		var MatchingEvents = EventDelegate.EventRegistries[EventObject.type];
 		//console.log("Handling live event: ", EventObject.type);
 		for (var Object in MatchingEvents)

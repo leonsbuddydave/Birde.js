@@ -20,9 +20,9 @@ WorldObject =
 		return DeepCopy(this);
 	},
 	
-	Class: "GENERIC",
+	Init : function(Me){},
 	
-	Me : this,
+	Class: "Generic",
 
 	x : 0,
 	y : 0,
@@ -35,7 +35,8 @@ WorldObject =
 		Update event is undefined for a blank world object - must be overridden by subclasses
 		The update function is also responsible for updating its children - the world will not do that on its own
 	*/
-	Update: function(Me, dt) {
+	Update: function(Me, dt)
+	{
 		// Called every step
 		console.log("Update method not overridden - what the fuck do you think you'll get done with this?");
 	},
@@ -54,15 +55,11 @@ WorldObject =
 		Context.drawImage(this.Data.Sprite, this.x - this.Data.Sprite.width / 2, this.y - this.Data.Sprite.height / 2);
 	},
 	
-	Events:
-	{
-
-	},
+	Collision : {},
 	
-	Reactions:
-	{
-
-	},
+	Events:{},
+	
+	Reactions: {},
 	
 	Data: {} // Data object is used for any miscellaneous data storage
 }

@@ -1,10 +1,6 @@
 World =
 {
 	SceneGraph : [],
-	ClassIndex :
-	{
-		GENERIC : []
-	},
 	Position :
 	{
 		// X and Y world positions determine the world's position relative to the canvas
@@ -12,27 +8,39 @@ World =
 		x : 0,
 		y : 0
 	},
-	RegisterClass : function(Obj)
+	
+	GetClass : function(Class)
 	{
-		if (typeof this.ClassIndex[Obj.Class] == 'undefined' || this.ClassIndex[Obj.Class] == null)
-			this.ClassIndex[Obj.Class] = [];
+		if (typeof Class == 'undefined' || Class == null || Class == "")
+			return;
 			
-		this.ClassIndex[Obj.Class].push( Obj );
+		var Matches = [];
+		
+		for (var obj in this.SceneGraph)
+		{
+			if (this.SceneGraph[obj].Class == Class)
+				Matches.push( this.SceneGraph[obj] );
+		}
+		
+		return Matches;
 	},
+	
 	Add : function()
 	{
 		if (arguments.length == 0)
 			return this;
+
 		for (var obj in arguments)
 		{
 			// Registers an object for events and then pushes it onto the scene graph
+			arguments[obj].Init( arguments[obj] );
 			EventDelegate.RegisterObject( arguments[obj] );
-			this.RegisterClass( arguments[obj] );
 			this.SceneGraph.push( arguments[obj] );
 			this.SceneGraph.sort(this.ZCompare);
 		}
 		return this;
 	},
+	
 	ZCompare : function(a, b)
 	{
 		if (a.z > b.z)

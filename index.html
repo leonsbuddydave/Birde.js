@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<script type="text/javascript" src="Collision.js"></script>
 		<script type="text/javascript" src="Math.js"></script>
 		<script type="text/javascript" src="Enum.js"></script>
 		<script type="text/javascript" src="Graphics.js"></script>
@@ -28,23 +29,36 @@
 					Class : "OtherBall",
 					Events :
 					{
-						click : function(Me, Evt)
+						mousedown : function(Me, Evt)
 						{
-							var mouseSlope = Math.slope(Me.x, Me.y, Evt.x, Evt.y);
-							Me.Data.deltaX = mouseSlope.x;
-							Me.Data.deltaY = mouseSlope.y;
+							Me.Data.MouseDown = true;
+						},
+						mouseup : function(Me, Evt)
+						{
+							Me.Data.MouseDown = false;
+						},
+						mousemove : function(Me, Evt)
+						{
+							Me.Data.MouseX = Evt.x;
+							Me.Data.MouseY = Evt.y;
 						}
 					},
 					Update : function(Me, dt)
 					{
-						Me.x += Me.Data.deltaX * dt;
-						Me.y += Me.Data.deltaY * dt;
+						if (Me.Data.MouseDown)
+						{
+							var mouseSlope = Math.slope(Me.x, Me.y, Me.Data.MouseX, Me.Data.MouseY);
+							Me.x += 10 * mouseSlope.x * dt;
+							Me.y += 10 * mouseSlope.y * dt;
+						}
 					},
 					Data :
 					{
+						MouseDown : false,
 						deltaX : 1,
 						deltaY : 1
-					}
+					},
+					Collision : Collision.Circle(62)
 				}
 			);
 			
