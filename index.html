@@ -20,7 +20,8 @@
 					Update : function(me, dt)
 					{
 						me.x += 30 * dt;
-					}
+					},
+					Collision : Collision.Circle(120)
 				}
 			);
 			
@@ -41,6 +42,10 @@
 						{
 							Me.Data.MouseX = Evt.x;
 							Me.Data.MouseY = Evt.y;
+						},
+						oncollision : function(Me, Him)
+						{
+							console.log("Collided with object of type " + Him.Class);
 						}
 					},
 					Update : function(Me, dt)
@@ -58,7 +63,6 @@
 						deltaX : 1,
 						deltaY : 1
 					},
-					Collision : Collision.Circle(62)
 				}
 			);
 			

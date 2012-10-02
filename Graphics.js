@@ -29,6 +29,8 @@ Graphics =
 	},
 	
 	/*
+		Clear
+		
 		This method clears all the buffers each frame.
 	*/	
 	Clear : function()

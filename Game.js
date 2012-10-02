@@ -11,13 +11,30 @@ window.requestAnimFrame = (function(){
 })();
 
 Game = {
+	/*
+		Running
+		
+		Game only runs if this is true. Calling Game.Start() sets this to true.
+	*/
 	Running : false,
+	
+	/*
+		Settings
+		
+		Things that can be set by the user or data that needs to be held onto by the engine.
+	*/
 	Settings :
 	{
 		FPS : 60,
 		TargetCanvasID : null
 	},
 	
+	/*
+		Setup
+		-- TargetCanvasID (the ID of the canvas to put the game on)
+		
+		Calls the initialization events for everything else.
+	*/
 	Setup : function(TargetCanvasID)
 	{
 		Graphics.SetupCanvas(TargetCanvasID);
@@ -25,6 +42,12 @@ Game = {
 		return this;
 	},
 	
+	/*
+		Start
+		-- TargetCanvasID (the ID of the canvas to put the game on)
+		
+		Initializes everything and starts the game loop.
+	*/
 	Start : function(TargetCanvasID)
 	{
 		// If debugging is turned off, just get rid of console.log completely
@@ -51,16 +74,23 @@ Game = {
 		return this;
 	},
 	
+	/*
+		Stop
+		
+		Halts execution.
+	*/
 	Stop : function()
 	{
 		this.Running = false;
 		return this;
 	},
 
-	Input : 
-	{
-	
-	},
+	/*
+		Update
+		-- lastTime (the start time of the last frame)
+		
+		The core game loop - loops through and calls the update and draw events for everything.
+	*/
 	Update : function(lastTime)
 	{
 		
@@ -89,6 +119,26 @@ Game = {
 			i++;
 		}
 		
+		// Collision checking
+		i = 0;
+		while ( i < World.SceneGraph.length )
+		{
+			var j = i + 1;
+			while ( j < World.SceneGraph.length )
+			{
+				if (Collision.Happened(World.SceneGraph[i], World.SceneGraph[j]))
+				{
+					if (World.SceneGraph[i].Events.oncollision)
+						World.SceneGraph[i].Events.oncollision( World.SceneGraph[i], World.SceneGraph[j] );
+					
+					if (World.SceneGraph[j].Events.oncollision)
+						World.SceneGraph[j].Events.oncollision( World.SceneGraph[j], World.SceneGraph[i] );
+				}
+				j++;
+			}
+			i++;
+		}
+		
 		if (DEBUG)
 		{
 			Debug.FPS = Math.floor( 1000 / dt );
@@ -98,6 +148,7 @@ Game = {
 		if (!this.Running) // Game has been told to stop
 			return;
 
+		// Call the loop again
 		this.LoopHandle = setTimeout( function() { Game.Update(newTime); }, 1000 / Game.Settings.FPS);
 	},
 };

@@ -1,9 +1,8 @@
-LayerType =
-{
-	CANVAS : 0,
-	ZSORT : 1
-}
-
+/*
+	EVENT
+	
+	Enumeration containing the names of all the supported events.
+*/
 EVENT = {
 	CLICK : "click",
 	MOUSEDOWN : "mousedown",
@@ -16,6 +15,12 @@ EVENT = {
 	KEYPRESS : "keypress"
 }
 
+/*
+	CollisionType
+	
+	BOX: Simple box collision
+	CIRCLE: Purely distance (radius-based) collision
+*/
 CollisionType =
 {
 	BOX : 0,
