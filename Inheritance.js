@@ -5,7 +5,7 @@ function DeepCopy(p, c)
 	var c = c||{};
 	for (var i in p)
 	{
-		if (typeof p[i] === 'object')
+		if (typeof p[i] === 'object' && p[i] != null)
 		{
 			c[i] = ( p[i].constructor === Array ) ? [] : {};
 			DeepCopy( p[i] , c[i] );

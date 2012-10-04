@@ -116,5 +116,16 @@ WorldObject =
 		Generic object used to store information about this object;
 		prevents the root of the object from being cluttered with storage
 	*/
-	Data: {} // Data object is used for any miscellaneous data storage
+	Data: {},
+	
+	/*
+		AngleTo
+		-- obj (another instance of WorldObject or a subclass of such)
+		
+		Returns the angle of this object to another
+	*/
+	AngleTo : function(obj)
+	{
+		return Math.fullAngleBetween(this.x, this.y, obj.x, obj.y);
+	}
 }

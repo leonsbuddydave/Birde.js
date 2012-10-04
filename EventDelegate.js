@@ -33,9 +33,10 @@ EventDelegate =
 	CreateEventShield : function(EventElement)
 	{
 		/*
-			The EventShield is a div that goes over the top of the canvas stack
+			The EventShield is a div that goes over the top of the canvas
 			and captures events on it
 		*/
+		
 		// Create the element
 		var EventShield = document.createElement('div');
 		

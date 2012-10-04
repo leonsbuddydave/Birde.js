@@ -16,17 +16,51 @@
 		<script type="text/javascript">
 			Ball = WorldObject.Extend(
 				{
+					x : 100,
+					y : 100,
 					Class : "Ball",
-					Update : function(me, dt)
+					Update : function(Me, dt)
 					{
-						me.x += 30 * dt;
+					
+						// Manual wall bounce collisions
+						if (typeof Me.Data.Sprite !== 'undefined')
+						{
+							if (Me.y + Me.Data.Sprite.height / 2 > Graphics.Height || Me.y - Me.Data.Sprite.height / 2 < 0)
+							{
+								Me.Data.vy *= -1;
+							}
+							if (Me.x + Me.Data.Sprite.width / 2 > Graphics.Width || Me.x - Me.Data.Sprite.width / 2 < 0)
+							{
+								Me.Data.vx *= -1;
+							}
+						}
+						
+						Me.x += Me.Data.vx * dt;
+						Me.y += Me.Data.vy * dt;
 					},
-					Collision : Collision.Circle(120)
+					Data :
+					{
+						vx : 800,
+						vy : 800
+					},
+					Collision : Collision.Circle(120),
+					Events :
+					{
+						oncollision : function(Me, Him)
+						{
+							var angleTo = Me.AngleTo(Him);
+							console.log(angleTo * 180 / Math.PI);
+							Me.Data.vx = 800 * Math.cos( angleTo );
+							Me.Data.vy = 800 * Math.sin( angleTo );
+						}
+					}
 				}
 			);
 			
 			OtherBall = Ball.Extend(
 				{
+					x : 300,
+					y : 300,
 					Class : "OtherBall",
 					Events :
 					{
@@ -42,10 +76,6 @@
 						{
 							Me.Data.MouseX = Evt.x;
 							Me.Data.MouseY = Evt.y;
-						},
-						oncollision : function(Me, Him)
-						{
-							console.log("Collided with object of type " + Him.Class);
 						}
 					},
 					Update : function(Me, dt)
@@ -62,7 +92,7 @@
 						MouseDown : false,
 						deltaX : 1,
 						deltaY : 1
-					},
+					}
 				}
 			);
 			
