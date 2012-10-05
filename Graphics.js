@@ -31,7 +31,7 @@ Graphics =
 	/*
 		Clear
 		
-		This method clears all the buffers each frame.
+		This method clears the canvas each frame
 	*/	
 	Clear : function()
 	{

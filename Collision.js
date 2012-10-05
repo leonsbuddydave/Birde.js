@@ -23,11 +23,14 @@ Collision =
 		else if (typeof obj2.Collision == 'undefined' || obj2.Collision == null)
 			return false;
 		
+		// Circular collision is easy as balls - compares the distance between objects against the 
+		// combined radii of both objects
 		if (obj1.Collision.type == CollisionType.CIRCLE && obj2.Collision.type == CollisionType.CIRCLE)
 		{
-			if ( Math.distance(obj1.x, obj1.y, obj2.x, obj2.y) <= obj1.Collision.radius )
+			if ( Math.distance(obj1.x, obj1.y, obj2.x, obj2.y) <= obj1.Collision.radius + obj2.Collision.radius )
 				return true;
 		}
+		// Collision between box objects - checks the inverse and returns the negation of the result
 		else if (obj1.Collision.type == CollisionType.BOX && obj2.Collision.type == CollisionType.BOX)
 		{
 			if (obj1.x + obj1.Collision.origin.x + obj1.Collision.width < obj2.x + obj2.Collision.origin.x)
@@ -48,6 +51,7 @@ Collision =
 		return false;
 	},
 
+	// Builds a collision box for an object
 	Box : function()
 	{
 		var width, height;
@@ -69,6 +73,7 @@ Collision =
 		};
 	},
 	
+	// Builds and returns a collision circle for an object
 	Circle : function(radius)
 	{
 		return {

@@ -35,6 +35,8 @@ EventDelegate =
 		/*
 			The EventShield is a div that goes over the top of the canvas
 			and captures events on it
+			
+			I don't know if we really need this, considering refactoring to just attach events to the canvas itself
 		*/
 		
 		// Create the element
