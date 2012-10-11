@@ -27,22 +27,23 @@ Collision =
 		// combined radii of both objects
 		if (obj1.Collision.type == CollisionType.CIRCLE && obj2.Collision.type == CollisionType.CIRCLE)
 		{
-			if ( Math.distance(obj1.x, obj1.y, obj2.x, obj2.y) <= obj1.Collision.radius + obj2.Collision.radius )
+			if ( Math.distance(obj1.x, obj1.y, obj2.x, obj2.y) <= obj1.Collision.radius * obj1.Scale + obj2.Collision.radius * obj2.Scale)
 				return true;
 		}
 		// Collision between box objects - checks the inverse and returns the negation of the result
+		// TODO: Scale this by the object scale
 		else if (obj1.Collision.type == CollisionType.BOX && obj2.Collision.type == CollisionType.BOX)
 		{
-			if (obj1.x + obj1.Collision.origin.x + obj1.Collision.width < obj2.x + obj2.Collision.origin.x)
+			if (obj1.x + obj1.Collision.origin.x * obj1.Scale + obj1.Collision.width * obj1.Scale < obj2.x + obj2.Collision.origin.x * obj2.Scale)
 				return false;
 			
-			if (obj1.y + obj1.Collision.origin.y + obj1.Collision.height < obj2.y + obj2.Collision.origin.y)
+			if (obj1.y + obj1.Collision.origin.y * obj1.Scale + obj1.Collision.height * obj1.Scale < obj2.y + obj2.Collision.origin.y * obj2.Scale)
 				return false;
 				
-			if (obj1.x + obj1.Collision.origin.x > obj2.x + obj2.Collision.origin.x + obj2.Collision.width)
+			if (obj1.x + obj1.Collision.origin.x * obj1.Scale > obj2.x + obj2.Collision.origin.x * obj2.Scale + obj2.Collision.width * obj2.Scale)
 				return false;
 				
-			if (obj1.y + obj1.Collision.origin.y > obj2.y + obj2.Collision.origin.y + obj2.Collision.height)
+			if (obj1.y + obj1.Collision.origin.y * obj1.Scale > obj2.y + obj2.Collision.origin.y * obj2.Scale + obj2.Collision.height * obj2.Scale)
 				return false;
 			
 			return true;

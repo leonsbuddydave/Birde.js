@@ -55,6 +55,10 @@ WorldObject =
 	y : 0,
 	z : 0, // Used for object layering
 	
+	// Scale of object
+	// Used for collision checking and is available to the Draw method
+	Scale : 1.0,
+	
 	/*
 		Children
 		
@@ -72,10 +76,7 @@ WorldObject =
 		
 		May be responsible for updating the children of this object - not sure yet.
 	*/
-	Update: function(Me, dt)
-	{
-		console.log("Update method not overridden - what the fuck do you think you'll get done with this?");
-	},
+	Update: function(Me, dt) {},
 	
 	/*
 		Draw
@@ -93,7 +94,13 @@ WorldObject =
 			Me.Data.Sprite = new Image();
 			Me.Data.Sprite.src = 'assets/red_ball.png';
 		}
-		Context.drawImage(Me.Data.Sprite, Me.x - Me.Data.Sprite.width / 2, Me.y - Me.Data.Sprite.height / 2);
+		Context.drawImage(
+			Me.Data.Sprite,
+			Me.x - Me.Data.Sprite.width / 2 * Me.Scale,
+			Me.y - Me.Data.Sprite.height / 2 * Me.Scale,
+			Me.Data.Sprite.width * Me.Scale,
+			Me.Data.Sprite.height * Me.Scale
+		);
 	},
 	
 	/*

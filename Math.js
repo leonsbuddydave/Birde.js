@@ -61,7 +61,5 @@ Math.fullAngleBetween = function(x1, y1, x2, y2)
 			quadrant = 2;
 	}
 	
-	console.log("Quadrant:" + quadrant);
-	
 	return this.atan( this.abs(y2 - y1) / this.abs(x2 - x1) ) + quadrant * this.PI / 2;
 }

@@ -14,10 +14,28 @@
 	<body>
 		<canvas id="GameScreen" width="800" height="600">Canvas not supported.</canvas>
 		<script type="text/javascript">
+			BallController = WorldObject.Extend(
+				{
+					Draw : function() {},
+					Events :
+					{
+						click : function(Me, Evt)
+						{
+							console.log("YEAH");
+							var SpawnBall = Ball.New();
+							SpawnBall.x = Math.random() * Graphics.Width;
+							SpawnBall.y = Math.random() * Graphics.Height;
+							World.Add(SpawnBall);
+						}
+					}
+				}
+			);
+		
 			Ball = WorldObject.Extend(
 				{
 					x : 100,
 					y : 100,
+					Scale : .5,
 					Class : "Ball",
 					Update : function(Me, dt)
 					{
@@ -25,11 +43,11 @@
 						// Manual wall bounce collisions
 						if (typeof Me.Data.Sprite !== 'undefined')
 						{
-							if (Me.y + Me.Data.Sprite.height / 2 > Graphics.Height || Me.y - Me.Data.Sprite.height / 2 < 0)
+							if (Me.y + Me.Data.Sprite.height / 2 * Me.Scale > Graphics.Height || Me.y - Me.Data.Sprite.height / 2 * Me.Scale < 0)
 							{
 								Me.Data.vy *= -1;
 							}
-							if (Me.x + Me.Data.Sprite.width / 2 > Graphics.Width || Me.x - Me.Data.Sprite.width / 2 < 0)
+							if (Me.x + Me.Data.Sprite.width / 2 * Me.Scale > Graphics.Width || Me.x - Me.Data.Sprite.width / 2 * Me.Scale < 0)
 							{
 								Me.Data.vx *= -1;
 							}
@@ -49,7 +67,6 @@
 						oncollision : function(Me, Him)
 						{
 							var angleTo = Me.AngleTo(Him);
-							console.log(angleTo * 180 / Math.PI);
 							Me.Data.vx = 800 * Math.cos( angleTo );
 							Me.Data.vy = 800 * Math.sin( angleTo );
 						}
@@ -97,9 +114,8 @@
 			);
 			
 			var MyBall = Ball.New();
-			var MySecondBall = OtherBall.New();
 			
-			World.Add(MyBall, MySecondBall);
+			World.Add(MyBall, BallController.New());
 			
 			Game.Start("GameScreen");
 		</script>
