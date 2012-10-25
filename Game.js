@@ -123,7 +123,6 @@ Game =
 	
 	ChooseCanvas : function(options)
 	{
-		console.log(options);
 		if (typeof options.CanvasID == 'undefined' || options.CanvasID == null)
 		{
 			if (typeof this.Options.CanvasID == 'undefined' || this.Options.CanvasID == null)

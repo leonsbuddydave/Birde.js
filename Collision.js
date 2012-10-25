@@ -188,8 +188,12 @@ Collision =
 			y = 0;
 			x++;
 		}
-		
 		this.PrintMask(TempMap);
+	},
+	
+	RemoveExtraPoints : function()
+	{
+	
 	},
 	
 	PrintMask : function(MaskArray)
