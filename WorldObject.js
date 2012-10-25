@@ -87,7 +87,7 @@ WorldObject =
 		Draw event, by default, loads a sprite if it hasn't been overriden by a child object.
 		This behavior is subject to change to prevent control objects needing Draw overrides.
 	*/
-	Draw: function(Me, Context, WorldPosition)
+	Draw: function(Me, Context)
 	{
 		if (typeof Me.Data.Sprite == 'undefined')
 		{
@@ -109,6 +109,22 @@ WorldObject =
 		Holds information about this object's collision box, if it has one
 	*/
 	Collision : {},
+	
+	Sprites :
+	{
+		CurFrame : 0,
+		SpriteBank : {},
+		
+		Add : function(spr)
+		{
+			// add new sprite
+		},
+		
+		Change : function(name, frame)
+		{
+			// Change current sprite
+		}
+	},
 	
 	/*
 		Events object

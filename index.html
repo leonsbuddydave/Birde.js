@@ -1,10 +1,13 @@
 <html>
 	<head>
+		<script type="text/javascript" src="Array2D.js"></script>
 		<script type="text/javascript" src="Collision.js"></script>
 		<script type="text/javascript" src="Math.js"></script>
 		<script type="text/javascript" src="Enum.js"></script>
+		<script type="text/javascript" src="Colors.js"></script>
 		<script type="text/javascript" src="Graphics.js"></script>
 		<script type="text/javascript" src="Inheritance.js"></script>
+		<script type="text/javascript" src="Sprite.js"></script>
 		<script type="text/javascript" src="WorldObject.js"></script>
 		<script type="text/javascript" src="EventDelegate.js"></script>
 		<script type="text/javascript" src="World.js"></script>
@@ -21,7 +24,6 @@
 					{
 						click : function(Me, Evt)
 						{
-							console.log("YEAH");
 							var SpawnBall = Ball.New();
 							SpawnBall.x = Math.random() * Graphics.Width;
 							SpawnBall.y = Math.random() * Graphics.Height;
@@ -117,7 +119,9 @@
 			
 			World.Add(MyBall, BallController.New());
 			
-			Game.Start("GameScreen");
+			Game.Start({
+				CanvasID : "GameScreen"
+			});
 		</script>
 	</body>
 </html>

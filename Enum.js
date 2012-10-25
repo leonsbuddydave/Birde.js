@@ -12,7 +12,9 @@ EVENT = {
 	MOUSEMOVE : "mousemove",
 	KEYUP : "keyup",
 	KEYDOWN : "keydown",
-	KEYPRESS : "keypress"
+	KEYPRESS : "keypress",
+	BLUR : "blur",
+	FOCUS : "focus"
 }
 
 /*

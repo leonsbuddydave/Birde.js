@@ -10,7 +10,8 @@ window.requestAnimFrame = (function(){
 		  };
 })();
 
-Game = {
+Game =
+{
 	/*
 		Running
 		
@@ -19,27 +20,29 @@ Game = {
 	Running : false,
 	
 	/*
-		Settings
-		
-		Things that can be set by the user or data that needs to be held onto by the engine.
-	*/
-	Settings :
-	{
-		FPS : 60,
-		TargetCanvasID : null
-	},
-	
-	/*
 		Setup
 		-- TargetCanvasID (the ID of the canvas to put the game on)
 		
 		Calls the initialization events for everything else.
 	*/
-	Setup : function(TargetCanvasID)
+	Setup : function(CanvasID)
 	{
-		Graphics.SetupCanvas(TargetCanvasID);
-		EventDelegate.Initialize(TargetCanvasID);
+		Graphics.SetupCanvas(CanvasID);
+		EventDelegate.Initialize(CanvasID);
 		return this;
+	},
+	
+	/*
+		Options
+		
+		Things that can be set by the user or data that needs to be held onto by the engine.
+	*/
+	Options :
+	{
+		FPS : 60,
+		CanvasID : null,
+		OnBlur : function() { Game.Stop(); },
+		OnFocus : function() { Game.Start(); }
 	},
 	
 	/*
@@ -48,30 +51,94 @@ Game = {
 		
 		Initializes everything and starts the game loop.
 	*/
-	Start : function(TargetCanvasID)
-	{
+	Start : function(options)
+	{	
+		if (this.Running == true)
+		{
+			console.log("Start failed - game already running.");
+			return this;
+		}
+		
 		// If debugging is turned off, just get rid of console.log completely
 		if (!DEBUG)
 			console.log = function(){ /* This function does nothing */ };
 			
-		if (typeof TargetCanvasID == 'undefined' || TargetCanvasID == null)
-			if (typeof this.Settings.TargetCanvasID == 'undefined' || this.Settings.TargetCanvasID == null)
-				return null;
-			else
-				TargetCanvasID = this.Settings.TargetCanvasID;
-		else
-			this.Settings.TargetCanvasID = TargetCanvasID;
+		options = options || {};
+			
+		// Use the new canvas if one has been provided, otherwise check for a stored one
+		this.HandleOptions(options);
 		
+		this.SetGameEvents(options);
 		
-		console.log("Starting engine.");
+		console.log("Starting game.");
 		
 		// Call the setup method to get everything in place
-		this.Setup(TargetCanvasID);
+		this.Setup(this.Options.CanvasID);
 		
 		// Start the game loop
 		this.Running = true;
 		this.Update( 0 );
+		
 		return this;
+	},
+	
+	/*
+		HandleOptions
+		-- options (options object)
+		
+		Handles the initial arguments passed to the game
+	*/
+	HandleOptions : function(options)
+	{
+		if (typeof options.OnBlur !== 'undefined' && options.OnBlur !== null)
+			Options.OnBlur = options.OnBlur;
+			
+		this.ChooseCanvas(options);
+	},
+	
+	SetGameEvents : function(options)
+	{
+		// Register the window to it too, so we catch tab changes
+		window.onblur = Game.Options.OnBlur;
+		
+		// Creates a game controller object for events
+		// this will be added to the SceneGraph automatically
+		var EvController = WorldObject.Extend({
+			Events :
+			{
+				click : function(Me, Evt)
+				{
+					Game.Options.OnFocus();
+				},
+				blur : function(Me, Evt)
+				{
+					Game.Options.OnBlur();
+				}
+			},
+			Draw : function(){}
+		});
+		
+		World.Add(EvController.New());
+	},
+	
+	ChooseCanvas : function(options)
+	{
+		console.log(options);
+		if (typeof options.CanvasID == 'undefined' || options.CanvasID == null)
+		{
+			if (typeof this.Options.CanvasID == 'undefined' || this.Options.CanvasID == null)
+			{
+				console.log("Game failed to start - no canvas provided.");
+				return null;
+			}
+			else
+			{
+				console.log("No CanvasID provided - using stored ID " + options.CanvasID);
+				options.CanvasID = this.Options.CanvasID;
+			}
+		}
+		else
+			this.Options.CanvasID = options.CanvasID;
 	},
 	
 	/*
@@ -93,7 +160,9 @@ Game = {
 	*/
 	Update : function(lastTime)
 	{
-		
+		if (!this.Running) // Game has been told to stop
+			return;
+			
 		// Get the time this frame starts at
 		// subtract the last frame's start time
 		var newTime = new Date().getTime();
@@ -144,11 +213,12 @@ Game = {
 			Debug.FPS = Math.floor( 1000 / dt );
 			Debug.Draw();
 		}
-		
-		if (!this.Running) // Game has been told to stop
-			return;
 
 		// Call the loop again
-		this.LoopHandle = setTimeout( function() { Game.Update(newTime); }, 1000 / Game.Settings.FPS);
-	},
+		//this.LoopHandle = setTimeout( function() { Game.Update(newTime); }, 1000 / Game.Options.FPS);
+		requestAnimFrame(function()
+		{
+			Game.Update(newTime);
+		});
+	}
 };

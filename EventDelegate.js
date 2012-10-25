@@ -11,7 +11,7 @@ EventDelegate =
 			return;
 		}
 		
-		var EventShield = this.CreateEventShield(EventElement);
+		var EventShield = EventElement;
 		EventShield.tabIndex = -1;
 		EventShield.onselectstart = function(){};
 		
@@ -26,6 +26,8 @@ EventDelegate =
 		EventShield.onkeyup = 
 		EventShield.onkeydown = 
 		EventShield.onkeypress = 
+		EventShield.onblur = 
+		EventShield.onfocus = 
 		this.HandleLiveEvent;
 		
 		EventShield.focus();
@@ -33,10 +35,7 @@ EventDelegate =
 	CreateEventShield : function(EventElement)
 	{
 		/*
-			The EventShield is a div that goes over the top of the canvas
-			and captures events on it
-			
-			I don't know if we really need this, considering refactoring to just attach events to the canvas itself
+			Attaches events to the canvas
 		*/
 		
 		// Create the element
@@ -49,10 +48,6 @@ EventDelegate =
 		EventShield.style.top = EventElement.offsetTop;
 		EventShield.style.width = EventElement.offsetWidth;
 		EventShield.style.height = EventElement.offsetHeight;
-		
-		EventElement.parentNode.insertBefore(EventShield, EventElement);
-		
-		this.EventShield = EventShield;
 		
 		return this.EventShield;
 	},
@@ -68,8 +63,9 @@ EventDelegate =
 	},
 	HandleLiveEvent : function(EventObject)
 	{
-		arguments[0].preventDefault();
+		//arguments[0].preventDefault();
 		var MatchingEvents = EventDelegate.EventRegistries[EventObject.type];
+		
 		//console.log("Handling live event: ", EventObject.type);
 		for (var Object in MatchingEvents)
 		{
@@ -104,6 +100,8 @@ EventDelegate =
 		"mousemove" : [],
 		"keyup" : [],
 		"keydown" : [],
-		"keypress" : []
+		"keypress" : [],
+		"blur" : [],
+		"focus" : []
 	}
  }

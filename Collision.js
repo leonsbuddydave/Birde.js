@@ -2,7 +2,24 @@ Point = function(x, y)
 {
 	this.x = x;
 	this.y = y;
+	
+	this.Shift = function(point)
+	{
+		// Non-destructive shift, returns new point
+		return new Point(this.x + point.x, this.y + point.y);
+	}
 }
+
+PointKernel = [
+	new Point(-1, -1),
+	new Point(0, -1),
+	new Point(1, -1),
+	new Point(-1, 0),
+	new Point(1, 0),
+	new Point(-1, 1),
+	new Point(0, 1),
+	new Point(1, 1)
+];
 
 Collision =
 {
@@ -64,7 +81,7 @@ Collision =
 			height = arguments[1];
 		}
 		else
-			return [];
+			return {};
 		
 		return {
 			type : CollisionType.BOX,
@@ -81,5 +98,155 @@ Collision =
 			type : CollisionType.CIRCLE,
 			radius : radius
 		};
+	},
+
+	FromMask : function(MaskImage, MaskColor)
+	{
+		// MaskColor is the color we're _removing_ from the collision spectrum
+		if (typeof MaskColor == 'undefined' || MaskColor == null)
+			MaskColor = new ColorRGBA(0, 0, 0, 0);
+		
+		if (typeof MaskImage == 'string')
+		{
+			// We got the src
+			var TempImage = new Image();
+			TempImage.src = MaskImage;
+			MaskImage = TempImage;
+		}
+		else if (typeof MaskImage != 'object')
+		{
+			// If it's not a string, and not an object, what?
+			// Fail to do anything
+			return {};
+		}
+		
+		var width = MaskImage.width;
+		var height = MaskImage.height;
+		
+		var MaskCanvas = document.createElement("canvas");
+		MaskCanvas.width = width;
+		MaskCanvas.height = height;
+		
+		var MCtx = MaskCanvas.getContext('2d');
+		MCtx.drawImage( MaskImage, 0, 0 );
+		
+		var MaskData = MCtx.getImageData(0, 0, width, height);
+
+		this.PolymapFromMaskData(MaskData, MaskColor);
+	},
+	
+	PolymapFromMaskData : function(MaskData, MaskColor)
+	{
+		// MaskColor is the "background" of the mask
+		console.log("Building polymap from mask data.");
+		
+		var PointMap = Array2D.New(0, MaskData.width, MaskData.height);
+		
+		var x = 0;
+		var y = 0;
+		while (y < MaskData.height)
+		{
+			while (x < MaskData.width)
+			{
+				
+				var colorStart = y * MaskData.width * 4 + x * 4;
+				var r = MaskData.data[ colorStart++ ];
+				var g = MaskData.data[ colorStart++ ];
+				var b = MaskData.data[ colorStart++ ];
+				var a = MaskData.data[ colorStart ];
+				
+				var PointCol = new ColorRGBA( r, g, b, a );
+				
+				if (!PointCol.Equals(MaskColor))
+				{
+					// different colors, add to map
+					// console.log("Adding to map!");
+					PointMap[x][y] = 1;
+				}
+				
+				// return false;
+				
+				x++;
+			}
+			x = 0;
+			y++;
+		}
+
+		x = 0, y = 0;
+		
+		var TempMap = Array2D.Copy(PointMap);
+		
+		while ( x < PointMap.length )
+		{
+			while ( y < PointMap[0].length )
+			{
+				// Perform surrounding check here, clear point if needed
+				if (this.IsSurrounded(PointMap, new Point(x, y)))
+					TempMap[x][y] = 0;
+				y++;
+			}
+			y = 0;
+			x++;
+		}
+		
+		this.PrintMask(TempMap);
+	},
+	
+	PrintMask : function(MaskArray)
+	{
+		var output = "";
+		x = 0, y = 0;
+		while (x < MaskArray.length)
+		{
+			while (y < MaskArray[0].length)
+			{
+				output += MaskArray[x][y];
+				y++;
+			}
+			output += "\n";
+			y = 0;
+			x++;
+		}
+		console.log(output);
+	},
+	
+	IsSurrounded : function(Map, MyPoint)
+	{
+		// Checks to see if a point is surrounded by 6 or more similar points
+		if (Map[MyPoint.x][MyPoint.y] == 0)
+			return false;
+			
+		var count = 0;
+		
+		// Uses the PointKernel array to determine if a given point is surrounded by other points 
+		var i = 0;
+		while (i < PointKernel.length)
+		{
+			var p = MyPoint.Shift( PointKernel[i] );
+			
+			if (p.x < 0 || p.x >= Map.length || p.y < 0 || p.y >= Map[0].length)
+			{
+				i++;
+			}
+			else
+			{
+				if ( Map[p.x][p.y] == 1 )
+				{
+					count++;
+					i++;
+				}
+				else
+				{
+					i++;
+				}
+			}
+		}
+		
+		if (count > 6)
+		{
+			return true;
+		}
+		
+		return false;
 	}
 }
