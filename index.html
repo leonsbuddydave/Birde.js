@@ -1,10 +1,13 @@
 <html>
 	<head>
+		<script type="text/javascript" src="Loader.js"></script>
+		<script type="text/javascript" src="Content.js"></script>
 		<script type="text/javascript" src="Array2D.js"></script>
 		<script type="text/javascript" src="Collision.js"></script>
 		<script type="text/javascript" src="Math.js"></script>
 		<script type="text/javascript" src="Enum.js"></script>
 		<script type="text/javascript" src="Colors.js"></script>
+		<script type="text/javascript" src="Drawing.js"></script>
 		<script type="text/javascript" src="Graphics.js"></script>
 		<script type="text/javascript" src="Inheritance.js"></script>
 		<script type="text/javascript" src="Sprite.js"></script>
@@ -33,15 +36,24 @@
 				}
 			);
 		
+			// Example of general object extension
 			Ball = WorldObject.Extend(
 				{
 					x : 100,
 					y : 100,
+					z : 100,
 					Scale : .5,
 					Class : "Ball",
+					Sprites :
+					{
+						//Idle : Sprite.New("assets/red_ball.png")
+					},
+					Init : function(Me)
+					{
+						Me.ChangeSprite(Me, "Idle");
+					},
 					Update : function(Me, dt)
 					{
-					
 						// Manual wall bounce collisions
 						if (typeof Me.Data.Sprite !== 'undefined')
 						{
@@ -75,53 +87,40 @@
 					}
 				}
 			);
-			
-			OtherBall = Ball.Extend(
+
+			Bird = WorldObject.Extend(
 				{
-					x : 300,
-					y : 300,
-					Class : "OtherBall",
-					Events :
+					x : 100,
+					y : 100,
+					Class : "Bird",
+					Sprites :
 					{
-						mousedown : function(Me, Evt)
-						{
-							Me.Data.MouseDown = true;
-						},
-						mouseup : function(Me, Evt)
-						{
-							Me.Data.MouseDown = false;
-						},
-						mousemove : function(Me, Evt)
-						{
-							Me.Data.MouseX = Evt.x;
-							Me.Data.MouseY = Evt.y;
-						}
+						Idle : Sprite.New("assets/robin.png", 240, 314, 0, 0, 22, 0)
 					},
 					Update : function(Me, dt)
 					{
-						if (Me.Data.MouseDown)
-						{
-							var mouseSlope = Math.slope(Me.x, Me.y, Me.Data.MouseX, Me.Data.MouseY);
-							Me.x += 10 * mouseSlope.x * dt;
-							Me.y += 10 * mouseSlope.y * dt;
-						}
+						Me.UpdateSprites(Me, dt);
 					},
-					Data :
+					Init : function(Me)
 					{
-						MouseDown : false,
-						deltaX : 1,
-						deltaY : 1
+						Me.ChangeSprite(Me, "Idle");
+					},
+					Draw : function(Me, C)
+					{
+						Drawing.DrawSprite(Me);
 					}
 				}
 			);
 			
 			var MyBall = Ball.New();
 			
-			World.Add(MyBall, BallController.New());
+			World.Add(MyBall, BallController.New(), Bird);
+			
 			
 			Game.Start({
 				CanvasID : "GameScreen"
 			});
+
 		</script>
 	</body>
 </html>

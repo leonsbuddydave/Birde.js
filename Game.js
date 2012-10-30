@@ -52,7 +52,8 @@ Game =
 		Initializes everything and starts the game loop.
 	*/
 	Start : function(options)
-	{	
+	{
+
 		if (this.Running == true)
 		{
 			console.log("Start failed - game already running.");
@@ -75,9 +76,21 @@ Game =
 		// Call the setup method to get everything in place
 		this.Setup(this.Options.CanvasID);
 		
-		// Start the game loop
-		this.Running = true;
-		this.Update( 0 );
+		if (!Loader.IsLoaded)
+		{
+			console.log("Waiting for content load to trigger.");
+			Loader.onload = function()
+			{
+				Game.Running = true;
+				Game.Update( 0 );
+			}
+		}
+		else
+		{
+			// Start the game loop
+			this.Running = true;
+			this.Update( 0 );
+		}
 		
 		return this;
 	},
@@ -182,7 +195,7 @@ Game =
 			if (typeof World.SceneGraph[i]["Update"] !== 'undefined')
 			{
 				World.SceneGraph[i].Update(World.SceneGraph[i], dt / 1000);
-				World.SceneGraph[i].Draw(World.SceneGraph[i], Graphics.ContextCache[0]);
+				World.SceneGraph[i].Draw(World.SceneGraph[i], Graphics.Context);
 			}
 			i++;
 		}

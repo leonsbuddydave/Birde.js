@@ -140,7 +140,7 @@ Collision =
 		// MaskColor is the "background" of the mask
 		console.log("Building polymap from mask data.");
 		
-		var PointMap = Array2D.New(0, MaskData.width, MaskData.height);
+		var PointMap = Array2D.New(MASK.BACKGROUND, MaskData.width, MaskData.height);
 		
 		var x = 0;
 		var y = 0;
@@ -161,7 +161,7 @@ Collision =
 				{
 					// different colors, add to map
 					// console.log("Adding to map!");
-					PointMap[x][y] = 1;
+					PointMap[x][y] = MASK.FOREGROUND;
 				}
 				
 				// return false;
@@ -182,18 +182,81 @@ Collision =
 			{
 				// Perform surrounding check here, clear point if needed
 				if (this.IsSurrounded(PointMap, new Point(x, y)))
-					TempMap[x][y] = 0;
+					TempMap[x][y] = MASK.BACKGROUND;
 				y++;
 			}
 			y = 0;
 			x++;
 		}
+		
+		var Points = this.RemoveExtraPoints( this.MaskArrayToPointArray( TempMap ) );
+		
+		console.log(Points);
 		this.PrintMask(TempMap);
 	},
 	
-	RemoveExtraPoints : function()
+	MaskArrayToPointArray : function(MaskArray)
 	{
+		var PointArray = [];
+		
+		var x = 0
+		var y = 0;
+		
+		while ( x < MaskArray.length )
+		{
+			while ( y < MaskArray[0].length )
+			{
+				if ( MaskArray[x][y] == MASK.FOREGROUND )
+					PointArray.push( new Point(x, y) );
+					
+				y++;
+			}
+			y = 0;
+			x++;
+		}
+		
+		return PointArray;
+	},
 	
+	RemoveExtraPoints : function(PointArray)
+	{
+		// Removes unnecessary points from the polygon mask
+		var CleanPointArray = [];
+		var i = 0;
+		while (i < PointArray.length)
+		{
+			var CurrentPoint = PointArray[i];
+			var PreviousPoint, NextPoint;
+			if (i == 0)
+			{
+				PreviousPoint = PointArray[ PointArray.length - 1 ];
+				NextPoint = PointArray[1];
+			}
+			else if (i == PointArray.length - 1)
+			{
+				PreviousPoint = PointArray[ PointArray.length - 2 ];
+				NextPoint = PointArray[0];
+			}
+			else
+			{
+				PreviousPoint = PointArray[ i - 1 ];
+				NextPoint = PointArray[ i + 1 ];
+			}
+			
+			if (
+				PreviousPoint.x != CurrentPoint.x ||
+				PreviousPoint.y != CurrentPoint.y ||
+				NextPoint.x != CurrentPoint.x ||
+				NextPoint.y != CurrentPoint.y
+			)
+			{
+				CleanPointArray.push( CurrentPoint );
+			}
+			
+			i++;
+		}
+		
+		return CleanPointArray;
 	},
 	
 	PrintMask : function(MaskArray)
@@ -217,7 +280,7 @@ Collision =
 	IsSurrounded : function(Map, MyPoint)
 	{
 		// Checks to see if a point is surrounded by 6 or more similar points
-		if (Map[MyPoint.x][MyPoint.y] == 0)
+		if (Map[MyPoint.x][MyPoint.y] == MASK.BACKGROUND)
 			return false;
 			
 		var count = 0;
@@ -234,7 +297,7 @@ Collision =
 			}
 			else
 			{
-				if ( Map[p.x][p.y] == 1 )
+				if ( Map[p.x][p.y] == MASK.FOREGROUND )
 				{
 					count++;
 					i++;

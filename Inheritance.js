@@ -2,7 +2,7 @@ function DeepCopy(p, c)
 {
 	if (p == window)
 		return;
-	var c = c||{};
+	var c = c || {};
 	for (var i in p)
 	{
 		if (typeof p[i] === 'object' && p[i] != null)
@@ -12,6 +12,7 @@ function DeepCopy(p, c)
 		}
 		else if (typeof c[i] == 'undefined')
 		{
+			console.log(p[i]);
 			c[i] = p[i];
 		}
 	}

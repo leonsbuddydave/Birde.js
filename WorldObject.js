@@ -5,6 +5,13 @@ WorldObject =
 		If a WorldObject is instantiated and drawn on the screen without first overriding the Draw method,
 		it will load a default sprite into memory and draw it on the screen at the object's (x, y) coordinates.
 	*/
+
+	Call : function(Me, MethodName)
+	{
+		var arguments = Array.prototype.slice.call(arguments).slice(2);
+
+		Me[MethodName](arguments);
+	},
 	
 	/*
 		Extend
@@ -110,20 +117,56 @@ WorldObject =
 	*/
 	Collision : {},
 	
-	Sprites :
+	Sprites : {},
+	
+	UpdateSprites : function(Me, dt)
+	{
+		if (Me.SpriteData.CurSprite == "")
+			return;
+
+		var Max = Me.Sprites[Me.SpriteData.CurSprite].Frames.length;
+		
+		Me.SpriteData.TimeLine += dt * Me.SpriteData.Speed;
+		
+		if (Me.SpriteData.TimeLine >= Max)
+			Me.SpriteData.TimeLine -= Max;
+		
+		Me.SpriteData.CurFrame = Math.floor( Me.SpriteData.TimeLine );
+
+		if (Me.SpriteData.CurFrame > Me.Sprites[Me.SpriteData.CurSprite].Frames.length)
+			Me.SpriteData.CurFrame = Me.SpriteData.CurFrame % Me.Sprites[Me.SpriteData.CurSprite].Frames.length;
+
+		//console.log( Me.SpriteData.CurFrame );
+	},
+	
+	AddSprite : function(Me, name, spr)
+	{
+		// add new sprite
+		Me.Sprites[name] = spr;
+	},
+
+	
+	// Changes the current sprite
+	ChangeSprite : function(Me, name, frame)
+	{
+		if (typeof frame == 'undefined')
+			frame = 0;
+		// Change current sprite
+		if (typeof Me.Sprites[name] !== 'undefined')
+		{
+			Me.SpriteData.CurSprite = name;
+			console.log("Changing sprite.");
+		}
+		else
+			console.log("No such sprite to change to.")
+	},
+	
+	SpriteData :
 	{
 		CurFrame : 0,
-		SpriteBank : {},
-		
-		Add : function(spr)
-		{
-			// add new sprite
-		},
-		
-		Change : function(name, frame)
-		{
-			// Change current sprite
-		}
+		CurSprite : "",
+		Speed : 22,
+		TimeLine : 0
 	},
 	
 	/*
@@ -132,14 +175,16 @@ WorldObject =
 		Holds references to all the events this object reacts to
 	*/
 	Events: {},
-	
 	/*
 		Data object
 		
 		Generic object used to store information about this object;
 		prevents the root of the object from being cluttered with storage
 	*/
-	Data: {},
+	Data:
+	{
+
+	},
 	
 	/*
 		AngleTo

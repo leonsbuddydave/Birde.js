@@ -28,3 +28,9 @@ CollisionType =
 	BOX : 0,
 	CIRCLE : 1
 }
+
+MASK = 
+{
+	FOREGROUND : 0,
+	BACKGROUND : 1
+}

@@ -7,7 +7,7 @@ Debug = {
 	// Draw gives us the debugging hud if it's called
 	Draw : function()
 	{
-		var c = Graphics.ContextCache[ 0 ];
+		var c = Graphics.Context;
 		c.fillStyle="#000";
 		c.lineStyle="#fff";
 		c.font="18px sans-serif";
