@@ -30,6 +30,7 @@ Sprite =
 				spr.Frames.push(spr.OriginalImage);
 				spr.Loaded = true;
 			}
+
 			// Only filename has been provided, assume everything else
 			spr.OriginalImage.src = filename;
 		}

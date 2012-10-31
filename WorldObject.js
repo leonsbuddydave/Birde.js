@@ -121,21 +121,29 @@ WorldObject =
 	
 	UpdateSprites : function(Me, dt)
 	{
-		if (Me.SpriteData.CurSprite == "")
+		if (Me.SpriteData.CurSprite == "" || !dt || Me.Sprites[Me.SpriteData.CurSprite].Frames.length == 0)
 			return;
 
-		var Max = Me.Sprites[Me.SpriteData.CurSprite].Frames.length;
+		console.log("DT: " + dt);
+
+		var TimelineEnd = Me.Sprites[Me.SpriteData.CurSprite].Frames.length * Me.SpriteData.Speed;
+
+		console.log(TimelineEnd);
 		
 		Me.SpriteData.TimeLine += dt * Me.SpriteData.Speed;
 		
-		if (Me.SpriteData.TimeLine >= Max)
-			Me.SpriteData.TimeLine -= Max;
+		if (Me.SpriteData.TimeLine >= TimelineEnd)
+		{	
+			Me.SpriteData.TimeLine -= TimelineEnd;
+		}
 		
 		Me.SpriteData.CurFrame = Math.floor( Me.SpriteData.TimeLine );
 
 		if (Me.SpriteData.CurFrame > Me.Sprites[Me.SpriteData.CurSprite].Frames.length)
 			Me.SpriteData.CurFrame = Me.SpriteData.CurFrame % Me.Sprites[Me.SpriteData.CurSprite].Frames.length;
 
+		if (isNaN(Me.SpriteData.CurFrame))
+			Exception.Throw(EXCEPTION.FRAMEINDEXEXCEPTION, "WorldObject.UpdateSprites", true);
 		//console.log( Me.SpriteData.CurFrame );
 	},
 	
@@ -151,14 +159,9 @@ WorldObject =
 	{
 		if (typeof frame == 'undefined')
 			frame = 0;
-		// Change current sprite
-		if (typeof Me.Sprites[name] !== 'undefined')
-		{
-			Me.SpriteData.CurSprite = name;
-			console.log("Changing sprite.");
-		}
-		else
-			console.log("No such sprite to change to.")
+
+		Me.SpriteData.CurSprite = name;
+		console.log("Changing sprite.");
 	},
 	
 	SpriteData :

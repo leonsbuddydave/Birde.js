@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<script type="text/javascript" src="Exception.js"></script>
 		<script type="text/javascript" src="Loader.js"></script>
 		<script type="text/javascript" src="Content.js"></script>
 		<script type="text/javascript" src="Array2D.js"></script>
@@ -88,6 +89,8 @@
 				}
 			);
 
+			var BirdSprite = Sprite.New("assets/robin.png", 240, 314, 0, 0, 22, 0);
+
 			Bird = WorldObject.Extend(
 				{
 					x : 100,
@@ -95,7 +98,7 @@
 					Class : "Bird",
 					Sprites :
 					{
-						Idle : Sprite.New("assets/robin.png", 240, 314, 0, 0, 22, 0)
+						Idle : BirdSprite
 					},
 					Update : function(Me, dt)
 					{
@@ -113,8 +116,10 @@
 			);
 			
 			var MyBall = Ball.New();
+
+			var MyBird = Bird.New();
 			
-			World.Add(MyBall, BallController.New(), Bird);
+			World.Add(MyBall, BallController.New(), MyBird);
 			
 			
 			Game.Start({
