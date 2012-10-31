@@ -13,6 +13,8 @@ Debug = {
 		c.font="18px sans-serif";
 		c.fillText("FPS: " + this.FPS, 20, 20);
 		
+		c.fillText("SCENE: " + World.SceneGraph.length + " OBJECTS", 20, 40);
+
 		if (!Game.Running)
 		{
 			c.fillText("PAUSED", 20, 40);

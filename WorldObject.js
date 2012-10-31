@@ -121,29 +121,25 @@ WorldObject =
 	
 	UpdateSprites : function(Me, dt)
 	{
-		if (Me.SpriteData.CurSprite == "" || !dt || Me.Sprites[Me.SpriteData.CurSprite].Frames.length == 0)
+		/*
+		console.log( Assets.AssetCache[Me.Sprites[Me.SpriteData.CurSprite]] );
+		if (Me.SpriteData.CurSprite == "" || !dt || typeof Assets.AssetCache[Me.Sprites[Me.SpriteData.CurSprite]] == 'undefined')
 			return;
+		*/
 
-		console.log("DT: " + dt);
-
-		var TimelineEnd = Me.Sprites[Me.SpriteData.CurSprite].Frames.length * Me.SpriteData.Speed;
-
-		console.log(TimelineEnd);
+		var TimePerFrame = 1 / Me.SpriteData.Speed;
 		
-		Me.SpriteData.TimeLine += dt * Me.SpriteData.Speed;
+		Me.SpriteData.TimeLine += dt;
 		
-		if (Me.SpriteData.TimeLine >= TimelineEnd)
+		if (Me.SpriteData.TimeLine >= 1)
 		{	
-			Me.SpriteData.TimeLine -= TimelineEnd;
+			Me.SpriteData.TimeLine -= 1;
 		}
 		
-		Me.SpriteData.CurFrame = Math.floor( Me.SpriteData.TimeLine );
-
-		if (Me.SpriteData.CurFrame > Me.Sprites[Me.SpriteData.CurSprite].Frames.length)
-			Me.SpriteData.CurFrame = Me.SpriteData.CurFrame % Me.Sprites[Me.SpriteData.CurSprite].Frames.length;
+		Me.SpriteData.CurFrame = Math.floor( Me.SpriteData.TimeLine * (Assets.AssetCache[Me.Sprites[Me.SpriteData.CurSprite]].Frames.length - 1) );
 
 		if (isNaN(Me.SpriteData.CurFrame))
-			Exception.Throw(EXCEPTION.FRAMEINDEXEXCEPTION, "WorldObject.UpdateSprites", true);
+			Exception.Throw(EXCEPTION.FRAMEINDEXEXCEPTION, "WorldObject.UpdateSprites");
 		//console.log( Me.SpriteData.CurFrame );
 	},
 	
@@ -161,15 +157,15 @@ WorldObject =
 			frame = 0;
 
 		Me.SpriteData.CurSprite = name;
-		console.log("Changing sprite.");
 	},
 	
 	SpriteData :
 	{
 		CurFrame : 0,
-		CurSprite : "",
+		CurSprite : 0,
 		Speed : 22,
-		TimeLine : 0
+		TimeLine : 0,
+		TimelineEnd : 0
 	},
 	
 	/*

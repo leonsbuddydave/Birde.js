@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<script type="text/javascript" src="Assets.js"></script>
 		<script type="text/javascript" src="Exception.js"></script>
 		<script type="text/javascript" src="Loader.js"></script>
 		<script type="text/javascript" src="Content.js"></script>
@@ -89,7 +90,21 @@
 				}
 			);
 
-			var BirdSprite = Sprite.New("assets/robin.png", 240, 314, 0, 0, 22, 0);
+			BirdManager = WorldObject.Extend(
+				{
+					Draw : function() {},
+					Events :
+					{
+						click : function(Me, Evt)
+						{
+							var SpawnBird = Bird.New();
+							SpawnBird.x = Math.random() * Graphics.Width;
+							SpawnBird.y = Math.random() * Graphics.Height;
+							World.Add(SpawnBird);
+						}
+					}
+				}
+			);
 
 			Bird = WorldObject.Extend(
 				{
@@ -98,7 +113,7 @@
 					Class : "Bird",
 					Sprites :
 					{
-						Idle : BirdSprite
+						Idle : Sprite.New("assets/robin.png", 240, 314, 0, 0, 22, 0)
 					},
 					Update : function(Me, dt)
 					{
@@ -114,17 +129,13 @@
 					}
 				}
 			);
-			
-			var MyBall = Ball.New();
 
-			var MyBird = Bird.New();
-			
-			World.Add(MyBall, BallController.New(), MyBird);
-			
+			World.Add(BirdManager.New());
 			
 			Game.Start({
 				CanvasID : "GameScreen"
 			});
+
 
 		</script>
 	</body>

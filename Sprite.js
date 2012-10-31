@@ -33,6 +33,8 @@ Sprite =
 
 			// Only filename has been provided, assume everything else
 			spr.OriginalImage.src = filename;
+
+			return Assets.AddSprite(spr);
 		}
 		else if (arguments.length >= 7)
 		{
@@ -69,6 +71,8 @@ Sprite =
 			}
 
 			spr.OriginalImage.src = filename;
+
+			return Assets.AddSprite(spr);
 		}
 		else
 		{

@@ -81,6 +81,7 @@ Game =
 			console.log("Waiting for content load to trigger.");
 			Loader.onload = function()
 			{
+				console.log("Content loaded!");
 				Game.Running = true;
 				Game.Update( 0 );
 			}
