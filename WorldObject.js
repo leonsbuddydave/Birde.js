@@ -61,6 +61,8 @@ WorldObject =
 	x : 0,
 	y : 0,
 	z : 0, // Used for object layering
+
+	Positioning : "WORLD",
 	
 	// Scale of object
 	// Used for collision checking and is available to the Draw method
@@ -127,16 +129,27 @@ WorldObject =
 			return;
 		*/
 
-		var TimePerFrame = 1 / Me.SpriteData.Speed;
-		
-		Me.SpriteData.TimeLine += dt;
-		
-		if (Me.SpriteData.TimeLine >= 1)
+		// I broke all of this. Fix it.
+
+		var NewTimelineEnd = Assets.AssetCache[Me.Sprites[Me.SpriteData.CurSprite]].Frames.length / Me.SpriteData.Speed;
+
+		if (NewTimelineEnd != Me.SpriteData.TimelineEnd)
+			Me.SpriteData.Timeline = 0;
+
+		Me.SpriteData.TimelineEnd = NewTimelineEnd;
+
+		Me.SpriteData.Timeline += dt;
+
+		if (Me.SpriteData.Timeline >= Me.SpriteData.TimelineEnd)
 		{	
-			Me.SpriteData.TimeLine -= 1;
+			Me.SpriteData.Timeline -= Me.SpriteData.TimelineEnd;
 		}
+
+		if (Me.SpriteData.Timeline < 0)
+			Me.SpriteData.Timeline = 0;
+
+		Me.SpriteData.CurFrame = Math.floor( Me.SpriteData.Timeline / Me.SpriteData.TimelineEnd * (Assets.AssetCache[Me.Sprites[Me.SpriteData.CurSprite]].Frames.length - 1) );		
 		
-		Me.SpriteData.CurFrame = Math.floor( Me.SpriteData.TimeLine * (Assets.AssetCache[Me.Sprites[Me.SpriteData.CurSprite]].Frames.length - 1) );
 
 		if (isNaN(Me.SpriteData.CurFrame))
 			Exception.Throw(EXCEPTION.FRAMEINDEXEXCEPTION, "WorldObject.UpdateSprites");
@@ -163,8 +176,8 @@ WorldObject =
 	{
 		CurFrame : 0,
 		CurSprite : 0,
-		Speed : 22,
-		TimeLine : 0,
+		Speed : 50,
+		Timeline : 0,
 		TimelineEnd : 0
 	},
 	

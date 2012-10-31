@@ -24,6 +24,18 @@ World =
 		
 		return Matches;
 	},
+
+	ApplyToClass : function(Class, Action)
+	{
+		// Action should be a method that takes a worldobject argument
+		var i = 0;
+		var Instances = this.GetClass(Class);
+		while (i < Instances.length)
+		{
+			Action(Instances[i]);
+			i++;
+		}
+	},
 	
 	Add : function()
 	{

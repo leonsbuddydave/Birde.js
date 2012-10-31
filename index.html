@@ -102,6 +102,18 @@
 							SpawnBird.y = Math.random() * Graphics.Height;
 							World.Add(SpawnBird);
 						}
+					},
+					Hundred : function()
+					{
+						var i = 0;
+						while (i < 100)
+						{
+							var SpawnBird = Bird.New();
+							SpawnBird.x = Math.random() * Graphics.Width;
+							SpawnBird.y = Math.random() * Graphics.Height;
+							World.Add(SpawnBird);
+							i++;
+						}
 					}
 				}
 			);
@@ -130,7 +142,9 @@
 				}
 			);
 
-			World.Add(BirdManager.New());
+			BM = BirdManager.New();
+
+			World.Add(BM);
 			
 			Game.Start({
 				CanvasID : "GameScreen"
