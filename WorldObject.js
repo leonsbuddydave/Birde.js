@@ -62,7 +62,7 @@ WorldObject =
 	y : 0,
 	z : 0, // Used for object layering
 
-	Positioning : "WORLD",
+	Positioning : POSITION.WORLD,
 	
 	// Scale of object
 	// Used for collision checking and is available to the Draw method
@@ -123,11 +123,10 @@ WorldObject =
 	
 	UpdateSprites : function(Me, dt)
 	{
-		/*
-		console.log( Assets.AssetCache[Me.Sprites[Me.SpriteData.CurSprite]] );
-		if (Me.SpriteData.CurSprite == "" || !dt || typeof Assets.AssetCache[Me.Sprites[Me.SpriteData.CurSprite]] == 'undefined')
+		
+		if (Me.SpriteData.CurSprite == null || !dt || typeof Assets.AssetCache[Me.Sprites[Me.SpriteData.CurSprite]] == 'undefined')
 			return;
-		*/
+		
 
 		// I broke all of this. Fix it.
 
@@ -175,7 +174,7 @@ WorldObject =
 	SpriteData :
 	{
 		CurFrame : 0,
-		CurSprite : 0,
+		CurSprite : null,
 		Speed : 50,
 		Timeline : 0,
 		TimelineEnd : 0

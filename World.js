@@ -1,13 +1,9 @@
 World =
 {
 	SceneGraph : [],
-	Position :
-	{
-		// X and Y world positions determine the world's position relative to the canvas
-		// in turn, elements in SceneGraph will be affected
-		x : 0,
-		y : 0
-	},
+	
+	x : 0,
+	y : 0,
 	
 	GetClass : function(Class)
 	{

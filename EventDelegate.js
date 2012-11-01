@@ -1,6 +1,23 @@
 EventDelegate = 
 {
 	EventShield : null,
+
+	MouseDeltaManager :
+	{
+		Update : function(ev)
+		{
+			this.DeltaX = ev.offsetX - this.LastX;
+			this.DeltaY = ev.offsetY - this.LastY;
+			this.LastX = ev.offsetX;
+			this.LastY = ev.offsetY;
+			console.log(this.DeltaX + ", " + this.DeltaY);
+		},
+		LastX : 0,
+		LastY : 0,
+		DeltaX : 0,
+		DeltaY : 0
+	},
+
 	Initialize : function(TargetElementID)
 	{
 		var EventElement = document.getElementById(TargetElementID);
@@ -64,6 +81,8 @@ EventDelegate =
 	HandleLiveEvent : function(EventObject)
 	{
 		//arguments[0].preventDefault();
+		EventDelegate.MouseDeltaManager.Update(EventObject);
+
 		var MatchingEvents = EventDelegate.EventRegistries[EventObject.type];
 		
 		//console.log("Handling live event: ", EventObject.type);
@@ -87,6 +106,10 @@ EventDelegate =
 		ev.x = e.offsetX;
 		ev.y = e.offsetY;
 		ev.Type = e.type;
+		ev.MouseDelta = { 
+			x : EventDelegate.MouseDeltaManager.DeltaX,
+			y : EventDelegate.MouseDeltaManager.DeltaY
+		};
 		
 		return ev;
 	},

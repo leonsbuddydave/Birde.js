@@ -90,9 +90,40 @@
 				}
 			);
 
+			WorldDragger = WorldObject.Extend({
+				Draw : function(){},
+				Class : "WorldDragger",
+				Events : 
+				{
+					mousedown : function(Me)
+					{
+						Me.Data.isMouseDown = true;
+					},
+					mouseup : function(Me)
+					{
+						Me.Data.isMouseDown = false;
+					},
+					mousemove : function(Me, Ev)
+					{
+						if (!Me.Data.isMouseDown)
+							return;
+						else
+						{
+							World.x += Ev.MouseDelta.x;
+							World.y += Ev.MouseDelta.y;
+						}
+					}
+				},
+				Data :
+				{
+					isMouseDown : false
+				}
+			});
+
 			BirdManager = WorldObject.Extend(
 				{
 					Draw : function() {},
+					Class : "BirdManager",
 					Events :
 					{
 						click : function(Me, Evt)
@@ -112,6 +143,15 @@
 							SpawnBird.x = Math.random() * Graphics.Width;
 							SpawnBird.y = Math.random() * Graphics.Height;
 							World.Add(SpawnBird);
+							i++;
+						}
+					},
+					Thousand : function()
+					{
+						var i = 0;
+						while (i < 10)
+						{
+							this.Hundred();
 							i++;
 						}
 					}
@@ -144,7 +184,9 @@
 
 			BM = BirdManager.New();
 
-			World.Add(BM);
+			WD = WorldDragger.New();
+
+			World.Add(BM, WD);
 			
 			Game.Start({
 				CanvasID : "GameScreen"

@@ -34,3 +34,9 @@ MASK =
 	FOREGROUND : 0,
 	BACKGROUND : 1
 }
+
+POSITION =
+{
+	WORLD : 0,
+	SCREEN : 1
+}

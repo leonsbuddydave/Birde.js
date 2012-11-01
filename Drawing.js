@@ -23,7 +23,20 @@ Drawing =
 			var frame = Assets.AssetCache[wo.Sprites[wo.SpriteData.CurSprite]].Frames[wo.SpriteData.CurFrame];
 			if (!frame)
 				Exception.Throw(EXCEPTION.DRAWSPRITEEXCEPTION, "Drawing.DrawSprite", wo, frame)
-			this.RawContext.drawImage( frame, wo.x, wo.y, frame.width * wo.Scale, frame.height * wo.Scale );
+
+			var x, y;
+
+			if (wo.Positioning == POSITION.SCREEN)
+			{
+				x = wo.x;
+				y = wo.y;
+			}
+			else if (wo.Positioning == POSITION.WORLD)
+			{
+				x = World.x + wo.x;
+				y = World.y + wo.y;
+			}
+			this.RawContext.drawImage( frame, x, y, frame.width * wo.Scale, frame.height * wo.Scale );
 		}
 	}
  };
