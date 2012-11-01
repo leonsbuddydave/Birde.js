@@ -48,7 +48,7 @@
 					Class : "Ball",
 					Sprites :
 					{
-						//Idle : Sprite.New("assets/red_ball.png")
+						Idle : Sprite.New("assets/red_ball.png")
 					},
 					Init : function(Me)
 					{
@@ -56,21 +56,14 @@
 					},
 					Update : function(Me, dt)
 					{
-						// Manual wall bounce collisions
-						if (typeof Me.Data.Sprite !== 'undefined')
-						{
-							if (Me.y + Me.Data.Sprite.height / 2 * Me.Scale > Graphics.Height || Me.y - Me.Data.Sprite.height / 2 * Me.Scale < 0)
-							{
-								Me.Data.vy *= -1;
-							}
-							if (Me.x + Me.Data.Sprite.width / 2 * Me.Scale > Graphics.Width || Me.x - Me.Data.Sprite.width / 2 * Me.Scale < 0)
-							{
-								Me.Data.vx *= -1;
-							}
-						}
+						// Removed wall collisions - need porting over to the new shit
 						
 						Me.x += Me.Data.vx * dt;
 						Me.y += Me.Data.vy * dt;
+					},
+					Draw : function(Me, C)
+					{
+						Drawing.DrawSprite(Me);
 					},
 					Data :
 					{
@@ -82,6 +75,7 @@
 					{
 						oncollision : function(Me, Him)
 						{
+							console.log("Collision on ball.");
 							var angleTo = Me.AngleTo(Him);
 							Me.Data.vx = 800 * Math.cos( angleTo );
 							Me.Data.vy = 800 * Math.sin( angleTo );
@@ -129,8 +123,9 @@
 						click : function(Me, Evt)
 						{
 							var SpawnBird = Bird.New();
-							SpawnBird.x = Math.random() * Graphics.Width;
-							SpawnBird.y = Math.random() * Graphics.Height;
+							console.log(Evt.WorldMouse);
+							SpawnBird.x = Evt.WorldMouse.x;
+							SpawnBird.y = Evt.WorldMouse.y;
 							World.Add(SpawnBird);
 						}
 					},

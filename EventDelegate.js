@@ -110,7 +110,11 @@ EventDelegate =
 			x : EventDelegate.MouseDeltaManager.DeltaX,
 			y : EventDelegate.MouseDeltaManager.DeltaY
 		};
-		
+		ev.WorldMouse = {
+			x : -1 * World.x + e.offsetX,
+			y : -1 * World.y + e.offsetY
+		};
+
 		return ev;
 	},
 	EventRegistries :

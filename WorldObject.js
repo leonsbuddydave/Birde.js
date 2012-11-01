@@ -98,18 +98,7 @@ WorldObject =
 	*/
 	Draw: function(Me, Context)
 	{
-		if (typeof Me.Data.Sprite == 'undefined')
-		{
-			Me.Data.Sprite = new Image();
-			Me.Data.Sprite.src = 'assets/red_ball.png';
-		}
-		Context.drawImage(
-			Me.Data.Sprite,
-			Me.x - Me.Data.Sprite.width / 2 * Me.Scale,
-			Me.y - Me.Data.Sprite.height / 2 * Me.Scale,
-			Me.Data.Sprite.width * Me.Scale,
-			Me.Data.Sprite.height * Me.Scale
-		);
+		
 	},
 	
 	/*
