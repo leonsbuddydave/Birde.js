@@ -137,7 +137,6 @@ WorldObject =
 		
 		if (isNaN(Me.SpriteData.CurFrame))
 			Exception.Throw(EXCEPTION.FRAMEINDEXEXCEPTION, "WorldObject.UpdateSprites");
-		//console.log( Me.SpriteData.CurFrame );
 	},
 	
 	AddSprite : function(Me, name, spr)
