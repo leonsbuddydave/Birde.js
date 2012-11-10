@@ -38,5 +38,6 @@ Drawing =
 			}
 			this.RawContext.drawImage( frame, x, y, frame.width * wo.Scale, frame.height * wo.Scale );
 		}
+		
 	}
  };

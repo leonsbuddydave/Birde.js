@@ -135,6 +135,8 @@ WorldObject =
 
 		Me.SpriteData.CurFrame = Math.floor( Me.SpriteData.Timeline / Me.SpriteData.TimelineEnd * (Assets.AssetCache[Me.Sprites[Me.SpriteData.CurSprite]].Frames.length) );		
 		
+		console.log(Me.SpriteData.CurFrame);
+
 		if (isNaN(Me.SpriteData.CurFrame))
 			Exception.Throw(EXCEPTION.FRAMEINDEXEXCEPTION, "WorldObject.UpdateSprites");
 		//console.log( Me.SpriteData.CurFrame );
@@ -171,8 +173,6 @@ WorldObject =
 		Holds references to all the events this object reacts to
 	*/
 	Events: {},
-
-	Behaviors : {},
 	/*
 		Data object
 		

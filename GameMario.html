@@ -1,0 +1,152 @@
+<html>
+	<head>
+		<script type="text/javascript" src="Assets.js"></script>
+		<script type="text/javascript" src="Exception.js"></script>
+		<script type="text/javascript" src="Loader.js"></script>
+		<script type="text/javascript" src="Content.js"></script>
+		<script type="text/javascript" src="Array2D.js"></script>
+		<script type="text/javascript" src="Collision.js"></script>
+		<script type="text/javascript" src="Math.js"></script>
+		<script type="text/javascript" src="Enum.js"></script>
+		<script type="text/javascript" src="Colors.js"></script>
+		<script type="text/javascript" src="Drawing.js"></script>
+		<script type="text/javascript" src="Graphics.js"></script>
+		<script type="text/javascript" src="Inheritance.js"></script>
+		<script type="text/javascript" src="Sprite.js"></script>
+		<script type="text/javascript" src="Sound.js"></script>
+		<script type="text/javascript" src="WorldObject.js"></script>
+		<script type="text/javascript" src="Keyboard.js"></script>
+		<script type="text/javascript" src="EventDelegate.js"></script>
+		<script type="text/javascript" src="World.js"></script>
+		<script type="text/javascript" src="Game.js"></script>
+		<script type="text/javascript" src="Debug.js"></script>
+	</head>
+	<body>
+		<canvas id="GameScreen" width="1366" height="768">Canvas not supported.</canvas>
+		<script type="text/javascript">
+
+			Graphics.Flags.CLEARCOLOR = "#807ffe";
+
+			Mario = WorldObject.Extend({
+				x : 100,
+				y : 500,
+				Class : "Player",
+				Sprites : 
+				{
+					IdleRight : Sprite.New("assets/mario-idle-right.png"),
+					IdleLeft : Sprite.New("assets/mario-idle-left.png"),
+					RunningRight : Sprite.New("assets/mario-running-right.png", 64, 64, 0, 0, 3, 0),
+					RunningLeft : Sprite.New("assets/mario-running-left.png", 64, 64, 0, 0, 3, 0),
+					JumpRight : Sprite.New("assets/mario-jump-right.png"),
+					JumpLeft : Sprite.New("assets/mario-jump-left.png")
+				},
+				Update : function(Me, dt)
+				{
+					Me.UpdateSprites(Me, dt);
+					if (Keyboard.IsDown("right"))
+						Me.x += 200 * dt;
+					else if (Keyboard.IsDown("left"))
+						Me.x -= 200 * dt;
+
+					if (Me.Data.Falling)
+						Me.y += Me.Data.vy * dt;
+
+					Me.Data.vy += 10;
+
+					if (Me.y >= 500 && Me.Data.Falling)
+					{
+						Me.Data.vy = 0;
+						Me.y = 500;
+						Me.Data.Falling = false;
+						if (Me.Data.Facing == "RIGHT")
+							if (Keyboard.IsDown("RIGHT"))
+								Me.ChangeSprite(Me, "RunningRight");
+							else
+								Me.ChangeSprite(Me, "IdleRight");
+						else
+							if (Keyboard.IsDown("LEFT"))
+								Me.ChangeSprite(Me, "RunningLeft");
+							else
+								Me.ChangeSpr9te(Me, "IdleLeft");
+					}
+				},
+				Init : function(Me)
+				{
+					Me.ChangeSprite(Me, "IdleRight");
+					Me.SpriteData.Speed = 10;
+				},
+				Draw : function(Me, C)
+				{
+					Drawing.DrawSprite(Me);
+				},
+				Events :
+				{
+					keydown : function(Me, Evt)
+					{
+						if (!Me.Data.Falling)
+						{
+							if (Evt.KeyCode == 39)
+							{
+								Me.ChangeSprite(Me, "RunningRight");
+								Me.Data.Facing = "RIGHT";
+							}
+							else if (Evt.KeyCode == 37)
+							{
+								Me.ChangeSprite(Me, "RunningLeft");
+								Me.Data.Facing = "LEFT";
+							}
+							else if (Evt.KeyCode == 32)
+							{
+								Me.Data.vy = -600;
+								Me.Data.Falling = true;
+								if (Me.Data.Facing == "RIGHT")
+									Me.ChangeSprite(Me, "JumpRight");
+								else
+									Me.ChangeSprite(Me, "JumpLeft");
+							}
+						}
+						else
+						{
+							if (Evt.KeyCode == 39)
+							{
+								Me.ChangeSprite(Me, "JumpRight");
+								Me.Data.Facing = "RIGHT";
+							}
+							else if (Evt.KeyCode == 37)
+							{
+								Me.ChangeSprite(Me, "JumpLeft");
+								Me.Data.Facing = "LEFT";
+							}
+						}
+					},
+					keyup : function(Me, Evt)
+					{
+						if (!Me.Data.Falling)
+						{
+							if (Evt.KeyCode == 39)
+								Me.ChangeSprite(Me, "IdleRight");
+							else if (Evt.KeyCode == 37)
+								Me.ChangeSprite(Me, "IdleLeft");
+						}
+					}
+				},
+				Data : 
+				{
+					vy : 0,
+					Falling : false,
+					Facing : "RIGHT"
+				}
+			});
+
+			M = Mario.New();
+
+			World.Add(M);
+			
+			Game.Start({
+				CanvasID : "GameScreen"
+			});
+
+
+		</script>
+	</body>
+</html>

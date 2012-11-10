@@ -10,7 +10,6 @@ EventDelegate =
 			this.DeltaY = ev.offsetY - this.LastY;
 			this.LastX = ev.offsetX;
 			this.LastY = ev.offsetY;
-			console.log(this.DeltaX + ", " + this.DeltaY);
 		},
 		LastX : 0,
 		LastY : 0,
@@ -82,6 +81,11 @@ EventDelegate =
 	{
 		//arguments[0].preventDefault();
 		EventDelegate.MouseDeltaManager.Update(EventObject);
+
+		if (EventObject.type == "keyup")
+			Keyboard.SetState(EventObject.keyCode, KEYSTATE.UP);
+		else if (EventObject.type == "keydown")
+			Keyboard.SetState(EventObject.keyCode, KEYSTATE.DOWN);
 
 		var MatchingEvents = EventDelegate.EventRegistries[EventObject.type];
 		

@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="Graphics.js"></script>
 		<script type="text/javascript" src="Inheritance.js"></script>
 		<script type="text/javascript" src="Sprite.js"></script>
+		<script type="text/javascript" src="Sound.js"></script>
 		<script type="text/javascript" src="WorldObject.js"></script>
 		<script type="text/javascript" src="EventDelegate.js"></script>
 		<script type="text/javascript" src="World.js"></script>
@@ -20,10 +21,10 @@
 		<script type="text/javascript" src="Debug.js"></script>
 	</head>
 	<body>
-		<canvas id="GameScreen" width="800" height="600">Canvas not supported.</canvas>
+		<canvas id="GameScreen" width="1366" height="768">Canvas not supported.</canvas>
 		<script type="text/javascript">
 			BallController = WorldObject.Extend(
-				{
+			{
 					Draw : function() {},
 					Events :
 					{
@@ -35,8 +36,7 @@
 							World.Add(SpawnBall);
 						}
 					}
-				}
-			);
+			});
 		
 			// Example of general object extension
 			Ball = WorldObject.Extend(
@@ -176,6 +176,13 @@
 					}
 				}
 			);
+
+			ScopeTester = WorldObject.Extend({
+				Fight : function()
+				{
+					console.log(this);
+				}
+			});
 
 			BM = BirdManager.New();
 

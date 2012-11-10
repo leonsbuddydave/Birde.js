@@ -69,7 +69,7 @@ Game =
 		// Use the new canvas if one has been provided, otherwise check for a stored one
 		this.HandleOptions(options);
 		
-		this.SetGameEvents(options);
+		//this.SetGameEvents(options);
 		
 		console.log("Starting game.");
 		
@@ -197,6 +197,9 @@ Game =
 			{
 				World.SceneGraph[i].Update(World.SceneGraph[i], dt / 1000);
 				World.SceneGraph[i].Draw(World.SceneGraph[i], Graphics.Context);
+
+				if (DEBUG)
+					Debug.DrawCollisionPoly(World.SceneGraph[i]);
 			}
 			i++;
 		}

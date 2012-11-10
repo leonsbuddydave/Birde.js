@@ -19,5 +19,15 @@ Debug = {
 		{
 			c.fillText("PAUSED", 20, 40);
 		}
+	},
+
+	DrawCollisionPoly : function(obj)
+	{
+		var c = Graphics.Context;
+		if (obj.Collision.type == CollisionType.BOX)
+		{
+			c.strokeStyle = "#f00";
+			c.strokeRect(obj.x + obj.Collision.origin.x - 1, obj.y + obj.Collision.origin.y - 1, obj.Collision.width + 2, obj.Collision.height + 2);
+		}
 	}
 }

@@ -23,6 +23,27 @@ PointKernel = [
 
 Collision =
 {
+	ContainsPoint : function(obj, p)
+	{
+		if (typeof obj.Collision == 'undefined' || obj.Collision == null)
+			return false;
+
+		// TODO : Take into account object scaling
+		if (obj.Collision.type == CollisionType.BOX)
+		{
+			if (p.x > obj.x + obj.Collision.origin.x &&
+				p.x < obj.x + obj.Collision.origin.x + obj.Collision.width &&
+				p.y > obj.y + obj.Collision.origin.y &&
+				p.y < obj.y + obj.Collision.origin.y + obj.Collision.height)
+				return true;
+
+			return false;
+		}
+		else
+		{
+			return false;
+		}
+	},
 	/*
 		Happened
 		-- obj1 (first object)
@@ -48,7 +69,6 @@ Collision =
 				return true;
 		}
 		// Collision between box objects - checks the inverse and returns the negation of the result
-		// TODO: Scale this by the object scale
 		else if (obj1.Collision.type == CollisionType.BOX && obj2.Collision.type == CollisionType.BOX)
 		{
 			if (obj1.x + obj1.Collision.origin.x * obj1.Scale + obj1.Collision.width * obj1.Scale < obj2.x + obj2.Collision.origin.x * obj2.Scale)
@@ -85,7 +105,7 @@ Collision =
 		
 		return {
 			type : CollisionType.BOX,
-			origin : { x: -width / 2, y: -height / 2 },
+			origin : { x: 0 , y: 0 },
 			width : width,
 			height : height
 		};

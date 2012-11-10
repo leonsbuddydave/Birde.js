@@ -4,11 +4,12 @@ Loader =
 	{
 		console.log("All content loaded.");
 	},
-	IsLoaded : false,
+	IsLoaded : true,
 	ContentTypes : ["Sprites"],
 	IncreaseLoadTarget : function(ContentType)
 	{
 		this[ContentType].LoadedTarget++;
+		this.IsLoaded = false;
 	},
 	UpdateLoaded : function(ContentType)
 	{
@@ -26,6 +27,11 @@ Loader =
 		this.onload();
 	},
 	Sprites :
+	{
+		LoadedTarget : 0,
+		Loaded : 0
+	},
+	Sounds :
 	{
 		LoadedTarget : 0,
 		Loaded : 0
