@@ -41,7 +41,7 @@ World =
 		for (var obj in arguments)
 		{
 			// Registers an object for events and then pushes it onto the scene graph
-			arguments[obj].Init( arguments[obj] );
+			//arguments[obj].Init( arguments[obj] );
 			EventDelegate.RegisterObject( arguments[obj] );
 			this.SceneGraph.push( arguments[obj] );
 			this.SceneGraph.sort(this.ZCompare);

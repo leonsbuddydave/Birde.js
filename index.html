@@ -3,7 +3,6 @@
 		<script type="text/javascript" src="Assets.js"></script>
 		<script type="text/javascript" src="Exception.js"></script>
 		<script type="text/javascript" src="Loader.js"></script>
-		<script type="text/javascript" src="Content.js"></script>
 		<script type="text/javascript" src="Array2D.js"></script>
 		<script type="text/javascript" src="Collision.js"></script>
 		<script type="text/javascript" src="Math.js"></script>
@@ -15,6 +14,8 @@
 		<script type="text/javascript" src="Sprite.js"></script>
 		<script type="text/javascript" src="Sound.js"></script>
 		<script type="text/javascript" src="WorldObject.js"></script>
+		<script type="text/javascript" src="ParticleEmitter.js"></script>
+		<script type="text/javascript" src="Keyboard.js"></script>
 		<script type="text/javascript" src="EventDelegate.js"></script>
 		<script type="text/javascript" src="World.js"></script>
 		<script type="text/javascript" src="Game.js"></script>
@@ -123,7 +124,6 @@
 						click : function(Me, Evt)
 						{
 							var SpawnBird = Bird.New();
-							console.log(Evt.WorldMouse);
 							SpawnBird.x = Evt.WorldMouse.x;
 							SpawnBird.y = Evt.WorldMouse.y;
 							World.Add(SpawnBird);
@@ -193,8 +193,6 @@
 			Game.Start({
 				CanvasID : "GameScreen"
 			});
-
-
 		</script>
 	</body>
 </html>

@@ -34,9 +34,11 @@ WorldObject =
 		
 		Returns a new instance of this object.
 	*/
-	New : function()
+	New : function(params)
 	{
-		return DeepCopy(this);
+		var c = DeepCopy(this);
+		c.Init(c, params);
+		return c;
 	},
 	
 	/*
