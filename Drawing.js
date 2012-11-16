@@ -15,7 +15,7 @@ Drawing =
 	*/
 	DrawSprite : function(wo)
 	{
-		if (!this.Okay())
+		if (!this.Okay() || typeof Assets.AssetCache[wo.Sprites[wo.SpriteData.CurSprite]].Frames[wo.SpriteData.CurFrame] == 'undefined')
 			return this;
 
 		if (wo.SpriteData.CurSprite !== "")

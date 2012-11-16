@@ -43,10 +43,13 @@
 				Update : function(Me, dt)
 				{
 					Me.UpdateSprites(Me, dt);
-					if (Keyboard.IsDown("right"))
-						Me.x += 200 * dt;
-					else if (Keyboard.IsDown("left"))
-						Me.x -= 200 * dt;
+					if (!Keyboard.IsDown("right") || !Keyboard.IsDown("left"))
+					{
+						if (Keyboard.IsDown("right"))
+							Me.x += 200 * dt;
+						else if (Keyboard.IsDown("left"))
+							Me.x -= 200 * dt;
+					}
 
 					if (Me.Data.Falling)
 						Me.y += Me.Data.vy * dt;
@@ -85,7 +88,12 @@
 					{
 						if (!Me.Data.Falling)
 						{
-							if (Evt.KeyCode == 39)
+							if (Keyboard.IsDown("right") && Keyboard.IsDown("left"))
+							{
+								// no nothing
+								Me.ChangeSprite(Me, "IdleRight");
+							}
+							else if (Evt.KeyCode == 39)
 							{
 								Me.ChangeSprite(Me, "RunningRight");
 								Me.Data.Facing = "RIGHT";
