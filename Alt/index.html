@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+	<head>
+		<script type="application/javascript" src="Birde.js"></script>
+		<script type="application/javascript">
+			for (var i = 0; i < 5; i++)
+			{
+				B.Actor("test" + i, {
+					x : 10 * i,
+					class : "SomeEnemy"
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<canvas id="targetCanvas" width="800" height="600">
+			Canvas not supported.
+		</canvas>
+	</body>
+</html>
