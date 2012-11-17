@@ -120,7 +120,7 @@
 		var i = 0;
 		while ( i < this.length )
 		{
-			iterator(this[i]);
+			iterator(this[i], i);
 			i++;
 		}
 
