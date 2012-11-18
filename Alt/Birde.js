@@ -52,13 +52,18 @@
 
 				// ID Selection
 				if (typeof Birde.fn.Scene.Actors[ id ] != 'undefined' )
-					return [ Birde.fn.Scene.Actors[ id ] ];
+				{
+					console.log("Match found.");
+					var a = new ActorGroup();
+					a.push( Birde.fn.Scene.Actors[ id ] );
+					return a;
+				}
 				else
-					return [];
+					return new ActorGroup();
 			}
 			else
 			{
-				return [];
+				return new ActorGroup();
 			}
 		},
 
@@ -111,6 +116,12 @@
 	var ActorGroup = function()
 	{
 		//this.prototype = new Array();
+		var i = 0;
+		while (i < arguments.length)
+		{
+			this[i] = arguments[i];
+			i++;
+		}
 	}
 
 	ActorGroup.prototype = new Array();
@@ -127,15 +138,31 @@
 		return this;
 	}
 
-	ActorGroup.prototype.attr = function(attrs)
+	ActorGroup.prototype.attr = function()
 	{
-		this.each(function(e)
+		if (arguments.length == 1)
 		{
-			for (key in attrs)
+			var attrs = arguments[0];
+			this.each(function(e)
 			{
-				e[key] = attrs[key]
-			}
-		});
+				for (key in attrs)
+				{
+					e[key] = attrs[key]
+				}
+			});
+		}
+		else if (arguments.length == 2)
+		{
+			var attr = arguments[0];
+			var value = arguments[1];
+
+			console.log(arguments[1]);
+
+			this.each(function(e)
+			{
+				e[attr] = value;
+			});			
+		}
 
 		return this;
 	}
