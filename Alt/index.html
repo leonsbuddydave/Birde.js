@@ -2,13 +2,59 @@
 	<head>
 		<script type="application/javascript" src="Birde.js"></script>
 		<script type="application/javascript">
+		window.onload = function()
+		{
+			Birde.Init({
+				Canvas : "targetCanvas"
+			});
+
 			for (var i = 0; i < 5; i++)
 			{
 				B.Actor("test" + i, {
-					x : 10 * i,
-					class : "SomeEnemy"
+					x : 100 * i,
+					class : "SomeEnemy",
+					w : 50,
+					h : 300
 				});
 			}
+
+			B(".SomeEnemy")
+				.bind("draw", function(d)
+				{
+					d.DrawBounds(this);
+				})
+				.bind("step", function(dt)
+				{
+					this.move({
+						x : 80,
+						y : 10
+					});
+				});
+
+			B.Actor("testicle", {
+				class : "SomeOtherEnemy"
+			});
+
+			// Multi-class enemy test
+			/*
+			B.Actor("poopy", {
+				class : "SomeEnemy SomeOtherEnemy",
+				w : 50,
+				h : 300
+			}).bind("draw", function(d)
+			{
+				d.DrawBounds(this);
+			}).bind("step", function(dt)
+			{
+				this.move({
+					x : 20,
+					y : 10
+				});
+			});
+			*/
+
+			B.Start();
+		}
 		</script>
 	</head>
 	<body>
