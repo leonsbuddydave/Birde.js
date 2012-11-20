@@ -32,6 +32,11 @@ window.requestAnimFrame = (function(){
 			return null;
 	}
 
+	Birde.ToggleFullScreen = function()
+	{
+		return new Birde.fn.fullscreen();
+	}
+
 	var Tick = 15;
 	var Initialized = false;
 	var lastFrameTime = 0;
@@ -145,6 +150,8 @@ window.requestAnimFrame = (function(){
 
 			lastFrameTime = newFrameTime;
 
+			Modules.Input.step(Tick);
+
 			for (key in EventRegistry.step)
 			{
 				var a = EventRegistry.step[key];
@@ -170,6 +177,17 @@ window.requestAnimFrame = (function(){
 				a.response.call(a.target, Modules.Drawing);
 			}
 		},
+
+		fullscreen : function()
+		{
+			Options.Canvas.style.position = "absolute";
+			Options.Canvas.style.top = "0";
+			Options.Canvas.style.left = "0";
+			Options.Canvas.width = document.body.scrollWidth;
+			Options.Canvas.height = document.body.scrollHeight;
+			Modules.Drawing.Width = Options.Canvas.width;
+			Modules.Drawing.Height = Options.Canvas.height;
+		}
 	}
 
 	Birde.fn.Scene =
@@ -229,28 +247,73 @@ window.requestAnimFrame = (function(){
 			i++;
 		}
 
+		this.isKeyDown = function()
+		{
+			// Returns a non-false value if any key is pressed down
+			var i = 0;
+			while (i < this.Keystates.length)
+			{
+				if (this.Keystates[i] == true)
+					return i;
+				i++;
+			}
+
+			return 0;
+		}
+
+		this.getAllKeysDown = function()
+		{
+			// Retrieves a list of all the keys currently pressed down
+			var keysDown = [];
+
+			var i = 0;
+			while (i < this.Keystates.length)
+			{
+				if (this.Keystates[i] == true)
+					keysDown.push(i);
+				i++;
+			}
+
+			return keysDown;
+		}
+
 		document.body.onkeydown = function(e)
 		{
 			// Sets key-down state
 			Modules.Input.Keystates[e.keyCode] = true;
-
-			for (var key in EventRegistry.keydown)
-			{
-				var a = EventRegistry.keydown[key];
-				a.response.call(a.target, e);
-			}
-
-			for (var key in SubEventRegistry.keydown[e.keyCode])
-			{
-				var a = SubEventRegistry.keydown[e.keyCode][key];
-				a.response.call(a.target, e);
-			}
 		}
 
 		document.body.onkeyup = function(e)
 		{
 			// Sets key-up state
 			Modules.Input.Keystates[e.keyCode] = false;
+		}
+
+		this.step = function(dt)
+		{
+			// Fires all the generic key events
+			for (var key in EventRegistry.keydown)
+			{
+				if (this.isKeyDown())
+				{
+					var a = EventRegistry.keydown[key];
+					a.response.call(a.target);
+				}
+			}
+
+			// Fires all the specific key events
+			var keysDown = this.getAllKeysDown();
+			var i = 0;
+			while (i < keysDown.length)
+			{
+				for (var key in SubEventRegistry.keydown[keysDown[i]])
+				{
+					var a = SubEventRegistry.keydown[keysDown[i]][key];
+					a.response.call(a.target);
+				}
+				i++;
+			}
+
 		}
 	}
 
