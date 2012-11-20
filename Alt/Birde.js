@@ -47,7 +47,8 @@ window.requestAnimFrame = (function(){
 	var Modules =
 	{
 		Drawing : null,
-		Input : null
+		Input : null,
+		Math : null
 	}
 
 	Birde.fn = Birde.prototype =
@@ -58,6 +59,7 @@ window.requestAnimFrame = (function(){
 
 			Modules.Drawing = new Drawing(Options);
 			Modules.Input = new Input(Options);
+			Modules.Math = new BirdMath(Options);
 
 			Initialized = true;
 
@@ -175,6 +177,21 @@ window.requestAnimFrame = (function(){
 		Actors : []
 	}
 
+	var BirdMath = function(props)
+	{
+
+		this.radToDeg = function(x)
+		{
+			return x * 180 / Math.PI;
+		}
+
+		this.degToRad = function(x)
+		{
+			return x * Math.PI / 180;
+		}
+
+	}
+
 	// Drawing object, high-level interface for canvas drawing
 	var Drawing = function(props)
 	{
@@ -202,6 +219,7 @@ window.requestAnimFrame = (function(){
 	// Input object, monitors and stores everything related to input
 	var Input = function(props)
 	{
+
 		this.Keystates = [];
 
 		var i = 0;
@@ -273,6 +291,8 @@ window.requestAnimFrame = (function(){
 	}
 
 	w.B = w.Birde = Birde;
+
+	w.Birde.Modules = Modules;
 
 	// Actor Group - used to apply methods to a selection of actors
 	var ActorGroup = function()
@@ -394,6 +414,25 @@ window.requestAnimFrame = (function(){
 	ActorGroup.prototype.keyMovement = function(speed, keydir)
 	{
 
+		for (var key in keydir)
+		{
+			if (isNaN(key))
+				var keyCode = key.toUpperCase().charCodeAt(0);
+
+			var vx = speed * Math.cos( Modules.Math.degToRad(keydir[key]) );
+			var vy = speed * Math.sin( Modules.Math.degToRad(keydir[key]) );
+
+			console.log(vx);
+			console.log(vy);
+
+			this.bind("keydown[" + keyCode + "]", function()
+			{
+				this.move({
+					x : vx,
+					y : vy
+				});
+			});
+		}
 	}
 
 	// Actor class - everything on screen is an Actor

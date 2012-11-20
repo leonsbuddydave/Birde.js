@@ -23,6 +23,11 @@
 				{
 					d.DrawBounds(this);
 				})
+				.keyMovement(1000, {
+					W : 45
+				});
+
+				/*
 				.bind("step", function(dt)
 				{
 					this.move({
@@ -30,6 +35,7 @@
 						y : 10
 					});
 				});
+				*/
 
 			B.Actor("testicle", {
 				class : "SomeOtherEnemy"
