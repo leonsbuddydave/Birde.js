@@ -418,6 +418,8 @@ window.requestAnimFrame = (function(){
 		{
 			if (isNaN(key))
 				var keyCode = key.toUpperCase().charCodeAt(0);
+			else
+				var keyCode = key;
 
 			var vx = speed * Math.cos( Modules.Math.degToRad(keydir[key]) );
 			var vy = speed * Math.sin( Modules.Math.degToRad(keydir[key]) );
@@ -425,13 +427,16 @@ window.requestAnimFrame = (function(){
 			console.log(vx);
 			console.log(vy);
 
-			this.bind("keydown[" + keyCode + "]", function()
+			(function(vx, vy, ag)
 			{
-				this.move({
-					x : vx,
-					y : vy
+				ag.bind("keydown[" + keyCode + "]", function()
+				{
+					this.move({
+						x : vx,
+						y : vy
+					});
 				});
-			});
+			})(vx, vy, this);
 		}
 	}
 
