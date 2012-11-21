@@ -37,6 +37,29 @@ window.requestAnimFrame = (function(){
 		return new Birde.fn.fullscreen();
 	}
 
+	/*
+		This whole area's going to be reserved for things that might be more
+		conveniently allocated to the window object - we'll see.
+	*/
+	// example usage : 
+	var Polygon = function()
+	{
+		// Arguments object should contain all points
+		this.points = arguments;
+
+		this.type = "polygon";
+	}
+
+	var Circle = function(radius)
+	{
+
+	}
+
+	Circle.prototype = new Polygon();
+
+
+	////////////////////////////////////////////////////////
+
 	var Tick = 15;
 	var Initialized = false;
 	var lastFrameTime = 0;
@@ -192,9 +215,15 @@ window.requestAnimFrame = (function(){
 
 	Birde.fn.Scene =
 	{
+		Position :
+		{
+			x : 0,
+			y : 0
+		},
 		Actors : []
 	}
 
+	// Custom math module
 	var BirdMath = function(props)
 	{
 
@@ -207,7 +236,6 @@ window.requestAnimFrame = (function(){
 		{
 			return x * Math.PI / 180;
 		}
-
 	}
 
 	// Drawing object, high-level interface for canvas drawing
@@ -229,7 +257,10 @@ window.requestAnimFrame = (function(){
 		this.DrawBounds = function(actor)
 		{
 			this.Context.fillStyle = "#f00";
-			this.Context.fillRect(actor.x, actor.y, actor.w, actor.h);
+
+			var pos = actor.getScreenPos();
+
+			this.Context.fillRect(pos.x, pos.y, actor.w, actor.h);
 			this.Context.fill();		
 		}
 	}
@@ -237,7 +268,32 @@ window.requestAnimFrame = (function(){
 	// Input object, monitors and stores everything related to input
 	var Input = function(props)
 	{
+		// Mouse-related shit
+		this.Mousestates = [];
 
+		this.Mouse =
+		{
+			lastX : 0,
+			lastY : 0,
+			x : 0,
+			y : 0,
+			deltaX : 0,
+			deltaY : 0
+		}
+
+		Options.Canvas.onmousemove = function(e)
+		{
+			var Mouse = Modules.Input.Mouse;
+			Mouse.lastX = Mouse.x;
+			Mouse.lastY = Mouse.y;
+			Mouse.x = e.offsetX;
+			Mouse.y = e.offsetY;
+			Mouse.deltaX = Mouse.x - Mouse.lastX;
+			Mouse.deltaY = Mouse.y - Mouse.lastY;
+		}
+
+		// Keyboard-related shit
+		// might make sense to divide the input module later
 		this.Keystates = [];
 
 		var i = 0;
@@ -313,7 +369,6 @@ window.requestAnimFrame = (function(){
 				}
 				i++;
 			}
-
 		}
 	}
 
@@ -462,10 +517,12 @@ window.requestAnimFrame = (function(){
 		return this;
 	}
 
-	ActorGroup.prototype.move = function(dir)
+	ActorGroup.prototype.move = function(speed, angle)
 	{
-		var x = dir.x * Tick;
-		var y = dir.y * Tick;
+		var x, y;
+
+		x = Math.cos( Modules.Math.degToRad(angle) ) * speed;
+		y = Math.cos( Modules.Math.degToRad(angle) ) * speed;
 
 		this.each(function(e)
 		{
@@ -476,7 +533,6 @@ window.requestAnimFrame = (function(){
 
 	ActorGroup.prototype.keyMovement = function(speed, keydir)
 	{
-
 		for (var key in keydir)
 		{
 			if (isNaN(key))
@@ -486,9 +542,6 @@ window.requestAnimFrame = (function(){
 
 			var vx = speed * Math.cos( Modules.Math.degToRad(keydir[key]) );
 			var vy = speed * Math.sin( Modules.Math.degToRad(keydir[key]) );
-
-			console.log(vx);
-			console.log(vy);
 
 			(function(vx, vy, ag)
 			{
@@ -503,18 +556,59 @@ window.requestAnimFrame = (function(){
 		}
 	}
 
+	ActorGroup.prototype.setParent = function(parentID)
+	{
+		if (parentID[0] != "#")
+		{
+			// not a proper id
+			return this;
+		}
+		else
+		{
+			var parent = new Birde.fn.select(parentID)[0];
+
+			this.each(function(e)
+			{
+				e.parent = parent;
+			});
+
+			return this;
+		}
+	}
+
 	// Actor class - everything on screen is an Actor
 	var Actor = function(id, props)
 	{
-
 		Birde.fn.Props.ExtendDefaults(this, props);
 
 		this.id = id;
 
 		this.class = props.class.split(" ");
 
+		this.parent = null;
+
+		this.getScreenPos = function()
+		{
+			// Returns the coordinates of the object relative to the world and any parents
+			var pos = {};
+			pos.x = Birde.fn.Scene.Position.x;
+			pos.y = Birde.fn.Scene.Position.y;
+
+			if (this.parent != null)
+			{
+				pos.x += this.parent.getScreenPos().x;
+				pos.y += this.parent.getScreenPos().y;
+			}
+
+			pos.x += this.x;
+			pos.y += this.y;
+
+			return pos;
+		}
+
 		this.destroy = function()
 		{
+			// Needs to unbind everything
 			Birde.fn.Scene.Actors[this.id] = "";
 		}
 

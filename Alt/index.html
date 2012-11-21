@@ -10,26 +10,95 @@
 
 			for (var i = 0; i < 5; i++)
 			{
-				B.Actor("test" + i, {
+				var f = B.Actor("test" + i, {
 					x : 100 * i,
 					class : "SomeEnemy",
-					w : 50,
-					h : 300
-				});
-			}
-
-			B(".SomeEnemy")
-				.bind("draw", function(d)
+					w : 60 - i * 10,
+					h : 60 - i * 10,
+					angle : 0,
+					rotSpeed : 5 * i
+				}).bind("draw", function(d)
 				{
 					d.DrawBounds(this);
-				})
-				.keyMovement(1000, {
-					W : 270,
-					A : 180,
-					D : 0,
-					S : 90
 				});
-				
+
+				if (i > 0)
+					f.bind("step", function(dt)
+					{
+						this.angle += dt * this.rotSpeed;
+
+						this.x = Math.cos(this.angle) * 50;
+
+						this.y = Math.sin(this.angle) * 50;
+					})
+					.setParent("#test" + (i - 1));
+			}
+
+			B("#test0")
+				.keyMovement(1000,
+				{
+					37 : 180,
+					38 : 270,
+					39 : 0,
+					40 : 90
+				});
+
+			/*
+			B("#test1")
+				.attr({
+					x : 60,
+					y : -10,
+					h : 60,
+					w : 60,
+					angle : 0
+				})
+				.bind("step", function(dt)
+				{
+					this.angle += dt * 5;
+
+					this.x = Math.cos(this.angle) * 100;
+
+					this.y = Math.sin(this.angle) * 100;
+				})
+				.setParent("#test0");
+
+			B("#test2")
+				.attr({
+					x : 60,
+					y : 60,
+					h : 30,
+					w : 30,
+					angle : 0
+				})
+				.bind("step", function(dt)
+				{
+					this.angle += dt * 10;
+
+					this.x = Math.cos(this.angle) * 100;
+
+					this.y = Math.sin(this.angle) * 100;
+				})
+				.setParent("#test1");
+
+				B("#test3")
+				.attr({
+					x : 60,
+					y : 60,
+					h : 10,
+					w : 10,
+					angle : 0
+				})
+				.bind("step", function(dt)
+				{
+					this.angle += dt * 15;
+
+					this.x = Math.cos(this.angle) * 100;
+
+					this.y = Math.sin(this.angle) * 100;
+				})
+				.setParent("#test2");
+				*/
+
 				/*
 				.bind("keydown", function()
 				{
@@ -50,10 +119,6 @@
 				});
 				*/
 
-			B.Actor("testicle", {
-				class : "SomeOtherEnemy"
-			});
-
 			// Multi-class enemy test
 			/*
 			B.Actor("poopy", {
@@ -72,6 +137,7 @@
 			});
 			*/
 
+			B.ToggleFullScreen();
 			B.Start();
 		}
 		</script>
