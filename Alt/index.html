@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 	<head>
-		<script type="application/javascript" src="Birde.js"></script>
-		<script type="application/javascript">
-		window.onload = function()
+		<meta charset="utf-8">
+		<script type="text/javascript" src="Birde.js"></script>
+		<script type="text/javascript">
+		var load = function()
 		{
 			Birde.Init({
 				Canvas : "targetCanvas"
@@ -11,12 +12,15 @@
 			for (var i = 0; i < 5; i++)
 			{
 				var f = B.Actor("test" + i, {
-					x : 100 * i,
+					x : 100 * i + 400,
+					y : 400,
+					z : -i,
 					class : "SomeEnemy",
 					w : 60 - i * 10,
 					h : 60 - i * 10,
 					angle : 0,
-					rotSpeed : 5 * i
+					rotSpeed : 5 * i,
+					color : "rgb(" + (255 - i * 30) + "," + (i * 10) + "," + (i * 30) + ")"
 				}).bind("draw", function(d)
 				{
 					d.DrawBounds(this);
@@ -29,7 +33,7 @@
 
 						this.x = Math.cos(this.angle) * 50;
 
-						this.y = Math.sin(this.angle) * 50;
+						this.y = Math.sin(this.angle) * 100;
 					})
 					.setParent("#test" + (i - 1));
 			}
@@ -137,8 +141,16 @@
 			});
 			*/
 
-			B.ToggleFullScreen();
+			B.ToggleFullScreen(); // disabled because broken in firefox
 			B.Start();
+		}
+
+		if (document.addEventListener) {
+			document.addEventListener("DOMContentLoaded", load, false);
+		}
+		else
+		{
+			window.onload = load;
 		}
 		</script>
 	</head>
