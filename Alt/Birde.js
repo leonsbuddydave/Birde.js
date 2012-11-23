@@ -102,6 +102,11 @@ window.requestAnimFrame = (function(){
 	}
 
 	/**
+	* Contains any third-party modules.
+	*/
+	Birde.mod = {}
+
+	/**
 	* Birde.Core
 	* Contains important game methods.
 	*/
@@ -114,6 +119,11 @@ window.requestAnimFrame = (function(){
 		init : function(props)
 		{
 			Options = Birde.extend(props, Options);
+
+			for (var key in Birde.mod)
+			{
+				Birde.mod[key].call(this);
+			}
 
 			Birde.Drawing.init(Options);
 			Birde.Input.init(Options);
@@ -495,7 +505,8 @@ window.requestAnimFrame = (function(){
 			y : 0,
 			w : 0,
 			h : 0,
-			class : ["default"]
+			class : ["default"],
+			behaviors : []
 		});
 
 		Birde.fn.Scene.Actors[id] = new Actor(id, props);
@@ -546,6 +557,7 @@ window.requestAnimFrame = (function(){
 		}
 	}
 	ActorGroup.prototype = new Array();
+	Birde.fn.ActorGroup = ActorGroup;
 
 	/**
 	* Iterator method that lets us apply a method to the entirety of the ActorGroup.
@@ -758,6 +770,14 @@ window.requestAnimFrame = (function(){
 				return true;
 
 			return false;
+		}
+
+		/**
+		* Adds a behavior to the object - similar to an event, but called every step (autonomous)
+		*/
+		this.addBehavior = function(b)
+		{
+			
 		}
 
 		/**
