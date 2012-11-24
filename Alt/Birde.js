@@ -224,10 +224,17 @@ window.requestAnimFrame = (function(){
 
 			Birde.Input.step(Tick);
 
+			// Call the step method of every Actor that signed up for it
 			for (key in EventRegistry.step)
 			{
 				var a = EventRegistry.step[key];
 				a.response.call(a.target, Tick);
+
+				// This last part might be a feature or need some reworking
+				// updating components here ensures that components only occur on objects
+				// that need to do processing anyway and have a step event
+				// that way we avoid updating nonexistent components on static objects
+				a.target.playComponents(Tick);
 			}
 
 			Birde.fn.draw();
@@ -505,8 +512,13 @@ window.requestAnimFrame = (function(){
 			y : 0,
 			w : 0,
 			h : 0,
-			class : ["default"],
-			behaviors : []
+			class : "default",
+
+			// tracks all the components relevant to this Actor
+			components : [],
+
+			// maintains a list of all the bindings this Actor is registered for
+			bindings : []
 		});
 
 		Birde.fn.Scene.Actors[id] = new Actor(id, props);
@@ -683,7 +695,7 @@ window.requestAnimFrame = (function(){
 		for (var key in keydir)
 		{
 			if (isNaN(key))
-				var keyCode = key.toUpperCase().charCodeAt(0);
+				var keyCode = key.toUpperCase().charCodeAt();
 			else
 				var keyCode = key;
 
@@ -724,6 +736,19 @@ window.requestAnimFrame = (function(){
 
 			return this;
 		}
+	}
+
+	/**
+	* Sugar for adding the same component to multiple actors
+	*/
+	ActorGroup.prototype.addComponent = function(c)
+	{
+		this.each(function(e)
+		{
+			e.addComponent(c);
+		});
+
+		return this;
 	}
 
 	/**
@@ -773,11 +798,41 @@ window.requestAnimFrame = (function(){
 		}
 
 		/**
-		* Adds a behavior to the object - similar to an event, but called every step (autonomous)
+		* Adds a component. Components are functions that define snippets of behavior.
 		*/
-		this.addBehavior = function(b)
+		this.addComponent = function(c)
 		{
-			
+			if (!this.isBoundTo("step"))
+			{
+				Birde("#" + this.id).bind("step", function(){});
+			}
+
+
+			this.components.push(c);
+
+			return this;
+		}
+
+		/**
+		*	Step through all components
+		*/
+		this.playComponents = function(dt)
+		{
+			for (var key in this.components)
+			{
+				this.components[key].call(this, dt);
+			}
+		}
+
+		/**
+		* Returns true if this actor is bound to the requested event
+		*/
+		this.isBoundTo = function(binding)
+		{
+			if (typeof EventRegistry[binding][this.id] !== 'undefined')
+				return true;
+
+			return false;
 		}
 
 		/**
@@ -799,6 +854,8 @@ window.requestAnimFrame = (function(){
 
 			this.x += x;
 			this.y += y;
+
+			return this;
 		}
 
 		Birde.extend(this, props);
