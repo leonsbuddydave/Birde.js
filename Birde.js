@@ -57,36 +57,6 @@ window.requestAnimFrame = (function(){
 		return new Birde.fn.fullscreen();
 	}
 
-	/**
-	* Birde.Geometry module
-	* Contains definitions for shapes - used primarily for collision.
-	*/
-	Birde.Geometry =
-	{
-		/**
-		* Vague definition for a polygon of any number of points.
-		*/
-		Polygon : function()
-		{
-			// Arguments object should contain all points
-			this.points = arguments;
-
-			this.type = "polygon";
-		},
-
-		/*
-		* Circle object - used for extremely cheap but less accurate collision detection.
-		*/
-		Circle : function(radius)
-		{
-			this.prototype = new Birde.Geometry.Polygon();
-
-			this.radius = radius;
-
-			this.type = "circle";
-		}
-	}
-	
 
 	////////////////////////////////////////////////////////
 	var Tick = 15;
@@ -364,7 +334,7 @@ window.requestAnimFrame = (function(){
 			var pos = actor.getScreenPos();
 
 			this.Context.fillRect(pos.x, pos.y, actor.w, actor.h);
-			this.Context.fill();		
+			this.Context.fill();
 		}
 	}
 
@@ -503,9 +473,23 @@ window.requestAnimFrame = (function(){
 	}
 
 	/**
+	*	Adds an actor to the scene
+	*/
+	Birde.AddActor = function(actor)
+	{
+		Birde.fn.Scene.Actors[actor.id] = actor;
+
+		Caches.Drawing.invalidate();
+
+		var a = new ActorGroup();
+		a.push(Birde.fn.Scene.Actors[actor.id]);
+		return a;
+	}
+
+	/**
 	* High level method for creating an actor and adding it to the scene in one go.
 	*/
-	Birde.A = Birde.a = Birde.Actor = function(id, props)
+	Birde.CreateAndAddActor = function(id, props)
 	{
 		props = Birde.extend(props, {
 			x : 0,
@@ -518,7 +502,10 @@ window.requestAnimFrame = (function(){
 			components : [],
 
 			// maintains a list of all the bindings this Actor is registered for
-			bindings : []
+			bindings : [],
+
+			// all actors have no parent by default
+			parent : null
 		});
 
 		Birde.fn.Scene.Actors[id] = new Actor(id, props);
@@ -544,7 +531,7 @@ window.requestAnimFrame = (function(){
 
 		for (var key in defaults)
 		{
-			if (typeof props[key] == 'undefined')
+			if (props[key] == null)
 				props[key] = defaults[key];
 		}
 		return props;
@@ -756,11 +743,31 @@ window.requestAnimFrame = (function(){
 	*/
 	var Actor = function(id, props)
 	{
+
 		this.id = id;
 
-		this.class = props.class.split(" ");
+		// First extends the provided properties object with defaults
+		Birde.extend(props, {
+			x : 0,
+			y : 0,
+			w : 0,
+			h : 0,
+			class : "default",
 
-		this.parent = null;
+			// tracks all the components relevant to this Actor
+			components : [],
+
+			// maintains a list of all the bindings this Actor is registered for
+			bindings : [],
+
+			// all actors have no parent by default
+			parent : null
+		});
+
+		// then extends the actor object with those properties - there's probably a cheap way to reduce this to a one-step process
+		Birde.extend(this, props);
+
+		this.class = props.class.split(" ");
 
 		/**
 		* Returns the position that this object should be drawn on the screen in - takes into account the position of the world, its parent's position,
@@ -804,6 +811,8 @@ window.requestAnimFrame = (function(){
 		{
 			if (!this.isBoundTo("step"))
 			{
+				// if this does not already have a step event, bind it to a blank one
+				// kind of hacky at this point but prevents objects from being needlessly updated
 				Birde("#" + this.id).bind("step", function(){});
 			}
 
@@ -857,9 +866,9 @@ window.requestAnimFrame = (function(){
 
 			return this;
 		}
-
-		Birde.extend(this, props);
 	}
+
+	w.Actor = Actor;
 
 	/**
 	* Cache interface - stores general methods for caches, will be used for drawing caches and selector caching

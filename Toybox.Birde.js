@@ -16,6 +16,8 @@
 				this.x = Math.cos(this.orbit_angle) * distance;
 				this.y = Math.sin(this.orbit_angle) * distance;
 			});
+
+			return this;
 		}
 
 		this.ActorGroup.prototype.bob = function(amplitude, wavelength)
@@ -29,6 +31,8 @@
 
 				this.y += Math.sin( this.wave_theta ) * amplitude;
 			});
+
+			return this;
 		}
 
 	}
