@@ -18,7 +18,7 @@
 				Canvas : "targetCanvas"
 			});
 
-			B.AddActor(new Actor("test0", {
+			B.Add(new Actor("test0", {
 				w : 30,
 				h : 30,
 				x : 100,
@@ -28,6 +28,7 @@
 			B("#test0")
 				.bind("draw", function(d)
 				{
+					console.log("Drawing");
 					d.DrawBounds(this);
 				})
 				.keyMovement(1000,

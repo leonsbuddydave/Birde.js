@@ -37,8 +37,8 @@ var Actor = function(id, props)
 	{
 		// Returns the coordinates of the object relative to the world and any parents
 		var pos = {};
-		pos.x = Birde.fn.Scene.Position.x;
-		pos.y = Birde.fn.Scene.Position.y;
+		pos.x = Birde.Scene.Position.x;
+		pos.y = Birde.Scene.Position.y;
 
 		if (this.parent != null)
 		{

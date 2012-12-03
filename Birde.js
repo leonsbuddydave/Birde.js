@@ -115,7 +115,7 @@ window.requestAnimFrame = (function(){
 				// Converts the scenegraph into an ActorGroup result
 				var result = new ActorGroup();
 
-				var A = Birde.fn.Scene.Actors;
+				var A = Birde.Scene.graph;
 
 				for (var key in A)
 				{
@@ -132,7 +132,7 @@ window.requestAnimFrame = (function(){
 				// Class selection
 				var results = new ActorGroup();
 
-				var A = Birde.fn.Scene.Actors;
+				var A = Birde.Scene.graph;
 
 				for (var id in A)
 				{
@@ -156,15 +156,7 @@ window.requestAnimFrame = (function(){
 			{
 				var id = selector.replace("#", "");
 
-				// ID Selection
-				if (typeof Birde.fn.Scene.Actors[ id ] != 'undefined' )
-				{	
-					var a = new ActorGroup();
-					a.push( Birde.fn.Scene.Actors[ id ] );
-					return a;
-				}
-				else
-					return new ActorGroup();
+				return Birde.Scene.SelectById(id);				
 			}
 			else
 			{
@@ -206,28 +198,9 @@ window.requestAnimFrame = (function(){
 				a.target.playComponents(Tick);
 			}
 
-			Birde.fn.draw();
+			Drawing.Step();
 
 			requestAnimFrame(Birde.fn.step);
-		},
-
-		/**
-		* Called during the step method - calls the Draw method of all objects bound to the Draw event.
-		*/
-		draw : function()
-		{
-
-			Drawing.Clear();
-
-			Caches.Drawing.updateIfInvalid();
-
-			var i = 0;
-			while (i < Caches.Drawing.length)
-			{
-				var a = Caches.Drawing[i];
-				a.response.call(a.target, Drawing);
-				i++;
-			}
 		},
 
 		/**
@@ -251,34 +224,11 @@ window.requestAnimFrame = (function(){
 		}
 	}
 
-	/**
-	* The currently loaded scene - name may change to reflect that more accurately. 
-	* Stores the position of the world relative to the camera and a list of all the actors in the scene.
-	*/
-	Birde.fn.Scene =
-	{
-		Position :
-		{
-			x : 0,
-			y : 0
-		},
-		Actors : []
-	}
-
 	Birde.Scene = new Scene();
 
-	/**
-	*	Adds an actor to the scene
-	*/
-	Birde.AddActor = function(actor)
+	Birde.Add = function(actor)
 	{
-		Birde.fn.Scene.Actors[actor.id] = actor;
-
-		Caches.Drawing.invalidate();
-
-		var a = new ActorGroup();
-		a.push(Birde.fn.Scene.Actors[actor.id]);
-		return a;
+		this.Scene.Add(actor);
 	}
 
 	/**

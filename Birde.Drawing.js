@@ -45,6 +45,21 @@ var Drawing =
 
 	Cache : new Cache(),
 
+	Step : function()
+	{
+		this.Clear();
+
+		this.Cache.updateIfInvalid();
+
+		var i = 0;
+		while (i < this.Cache.length)
+		{
+			var a = this.Cache[i];
+			a.response.call(a.target, this);
+			i++;
+		}
+	},
+
 	/**
 	* Clears the visible canvas with the stored ClearColor.
 	*/
