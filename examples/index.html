@@ -18,19 +18,25 @@
 				Canvas : "targetCanvas"
 			});
 
-			B.Add(new Actor("test0", {
-				w : 30,
-				h : 30,
-				x : 100,
-				y : 100				
-			}));
-
-			B("#test0")
+			var i = 0;
+			while (i < 5)
+			{
+				B.Add(new Actor("test" + i, {
+					w : 30,
+					h : 30,
+					x : 50 * (i + 1),
+					y : 100,
+					class : "testClass"
+				}))
 				.bind("draw", function(d)
 				{
-					console.log("Drawing");
 					d.DrawBounds(this);
-				})
+				});
+
+				i++;
+			}
+
+			B("#test0")
 				.keyMovement(1000,
 				{
 					37 : 180,

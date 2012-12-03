@@ -54,7 +54,7 @@ window.requestAnimFrame = (function(){
 	*/
 	Birde.ToggleFullScreen = function()
 	{
-		return new Birde.fn.fullscreen();
+		Drawing.ToggleFullscreen();
 	}
 
 
@@ -127,27 +127,33 @@ window.requestAnimFrame = (function(){
 			else if (selector[0] == ".")
 			{
 				// Searches for all elements containing the provided class
-				var c = selector.replace(/\./g, "").split(' ');
+				var classSelector = selector.replace(/\./g, "").split(' ');
 
 				// Class selection
 				var results = new ActorGroup();
 
 				var A = Birde.Scene.graph;
 
-				for (var id in A)
+				var i = 0;
+				while (i < A.length)
 				{
+					var a = A[i];
+
 					var matchedClasses = 0;
 
-					for (var classIndex in A[id].class)
+					var c = 0;
+					while (c < a.class.length)
 					{
-						if (c.indexOf( A[id].class[classIndex] ) != -1)
+						if (classSelector.indexOf( a.class[c] ) != -1)
 							matchedClasses++;
+
+						c++;
 					}
 
-					if (matchedClasses == c.length)
-					{
-						results.push(A[id]);
-					}
+					if (matchedClasses == classSelector.length)
+						results.push(a);
+
+					i++;
 				}
 
 				return results;
@@ -201,34 +207,17 @@ window.requestAnimFrame = (function(){
 			Drawing.Step();
 
 			requestAnimFrame(Birde.fn.step);
-		},
-
-		/**
-		* Temporary prototype method used for "fullscreening" the canvas area.
-		*/
-		fullscreen : function()
-		{
-			var newWidth = document.body.scrollWidth;
-			var newHeight = document.body.scrollHeight;
-
-			if (newWidth == 0 || newHeight == 0)
-				return;
-
-			Drawing.Canvas.style.position = "absolute";
-			Drawing.Canvas.style.top = "0";
-			Drawing.Canvas.style.left = "0";
-			Drawing.Canvas.width = newWidth;
-			Drawing.Canvas.height = newHeight;
-			Drawing.Width = Drawing.Canvas.width;
-			Drawing.Height = Drawing.Canvas.height;
 		}
 	}
 
 	Birde.Scene = new Scene();
 
+	/**
+	* Top level alias for Scene.Add - used specifically for adding elements to the active scene.
+	*/
 	Birde.Add = function(actor)
 	{
-		this.Scene.Add(actor);
+		return this.Scene.Add(actor);
 	}
 
 	/**

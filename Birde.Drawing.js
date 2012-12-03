@@ -9,12 +9,14 @@ var Drawing =
 	*/
 	init : function(props)
 	{
-		console.log(props);
 		this.Canvas = document.getElementById( props.Canvas );
 		this.Context = props.Context = this.Canvas.getContext('2d');
 		this.ClearColor = props.ClearColor;
-		this.Width = props.Canvas.Width;
-		this.Height = props.Canvas.Height;
+		this.Width = this.Canvas.width;
+		this.Height = this.Canvas.height;
+
+		this.StartSettings.Width = this.Width;
+		this.StartSettings.Height = this.Height;
 
 		// Prepare the drawing cache
 		this.Cache.rebuild = function()
@@ -42,6 +44,7 @@ var Drawing =
 	ClearColor : "#fff",
 	Width : 0,
 	Height : 0,
+	isFullscreen : false,
 
 	Cache : new Cache(),
 
@@ -82,5 +85,49 @@ var Drawing =
 
 		this.Context.fillRect(pos.x, pos.y, actor.w, actor.h);
 		this.Context.fill();
+	},
+
+	/**
+	* Used as backup when changes need to be made to the canvas (such as fullscreening it)
+	*/
+	StartSettings :
+	{
+		Width : 0,
+		Height : 0
+	},
+
+	/**
+	* Temporary prototype method used for "fullscreening" the canvas area.
+	*/
+	ToggleFullscreen : function()
+	{
+		if (!this.isFullscreen)
+		{
+			var newWidth = document.body.scrollWidth;
+			var newHeight = document.body.scrollHeight;
+
+			if (newWidth == 0 || newHeight == 0)
+				return;
+
+			this.StartSettings.Width = this.Width;
+			this.StartSettings.Height = this.Height;
+
+			this.Canvas.style.position = "absolute";
+			this.Canvas.style.top = "0";
+			this.Canvas.style.left = "0";
+			this.Canvas.width = newWidth;
+			this.Canvas.height = newHeight;
+			this.Width = this.Canvas.width;
+			this.Height = this.Canvas.height;
+		}
+		else
+		{
+			this.Canvas.width = this.StartSettings.Width;
+			this.Canvas.height = this.StartSettings.Height;
+			this.Width = this.Canvas.width;
+			this.Height = this.Canvas.height;
+		}
+
+		this.isFullscreen = !this.isFullscreen;
 	}
 }
