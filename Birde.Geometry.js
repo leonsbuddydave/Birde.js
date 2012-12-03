@@ -3,7 +3,7 @@
 * Contains definitions for shapes - used primarily for collision.
 */
 
-Geometry =
+var Geometry =
 {
 	/**
 	* Vague definition for a polygon of any number of points.

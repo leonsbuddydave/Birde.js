@@ -1,8 +1,16 @@
 <!DOCTYPE html>
 	<head>
 		<meta charset="utf-8">
+		<script type="text/javascript" src="../Birde.Scene.js"></script>
+		<script type="text/javascript" src="../Birde.Cache.js"></script>
+		<script type="text/javascript" src="../Birde.Input.js"></script>
+		<script type="text/javascript" src="../Birde.Drawing.js"></script>
+		<script type="text/javascript" src="../Birde.Math.js"></script>
+		<script type="text/javascript" src="../Birde.Event.js"></script>
+		<script type="text/javascript" src="../Birde.Geometry.js"></script>
+		<script type="text/javascript" src="../Birde.Actor.js"></script>
+		<script type="text/javascript" src="../Birde.ActorGroup.js"></script>
 		<script type="text/javascript" src="../Birde.js"></script>
-		<script type="text/javascript" src="../Toybox.Birde.js"></script>
 		<script type="text/javascript">
 		var load = function()
 		{
@@ -10,37 +18,18 @@
 				Canvas : "targetCanvas"
 			});
 
-			for (var i = 0; i < 5; i++)
-			{
-				var f = B.Actor("test" + i, {
-					x : 100 * i + 400,
-					y : 400,
-					z : -i,
-					class : "SomeEnemy",
-					w : 60 - i * 10,
-					h : 60 - i * 10,
-					angle : 0,
-					rotSpeed : 5 * i,
-					color : "rgb(" + (255 - i * 30) + "," + (i * 10) + "," + (i * 30) + ")" // changing color, just for shits
-				})
+			B.AddActor(new Actor("test0", {
+				w : 30,
+				h : 30,
+				x : 100,
+				y : 100				
+			}));
+
+			B("#test0")
 				.bind("draw", function(d)
 				{
 					d.DrawBounds(this);
-				});
-
-				if (i > 0)
-					f.bind("step", function(dt)
-					{
-						this.angle += dt * this.rotSpeed;
-
-						this.x = Math.cos(this.angle) * 50;
-
-						this.y = Math.sin(this.angle) * 100;
-					})
-					.setParent("#test" + (i - 1));
-			}
-
-			B("#test0")
+				})
 				.keyMovement(1000,
 				{
 					37 : 180,

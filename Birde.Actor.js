@@ -98,10 +98,21 @@ var Actor = function(id, props)
 	*/
 	this.isBoundTo = function(binding)
 	{
-		if (typeof Birde.EventRegistry[binding][this.id] !== 'undefined')
+		/*
+		if (typeof EventRegistry[binding][this.id] !== 'undefined')
 			return true;
 
 		return false;
+		*/
+	}
+
+	/**
+	* Removes this Actor from the scene entirely. Needs work to unbind everything the actor's done.
+	*/
+	this.destroy = function()
+	{
+		// Needs to unbind everything
+		Birde.fn.Scene.Actors[this.id] = "";
 	}
 
 	/**
