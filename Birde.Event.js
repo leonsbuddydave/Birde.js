@@ -7,7 +7,9 @@ var EventRegistry =
 	step : {},
 	keydown : {},
 	keyup : {},
-	keypress : {}
+	keypress : {},
+	contentloadupdate : {},
+	contentload : {}
 }
 
 /**
@@ -21,4 +23,13 @@ var SubEventRegistry =
 	keyup : {},
 	keypress : {},
 	keyisdown : {}
+}
+
+var FireEvent = function(event, args)
+{
+	for (var key in EventRegistry[event])
+	{
+		var a = EventRegistry[event][key];
+		a.response.call(a.target, args);
+	}
 }

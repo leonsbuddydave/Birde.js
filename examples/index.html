@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 	<head>
 		<meta charset="utf-8">
+		<script type="text/javascript" src="../Birde.Loader.js"></script>
 		<script type="text/javascript" src="../Birde.Select.js"></script>
 		<script type="text/javascript" src="../Birde.Scene.js"></script>
 		<script type="text/javascript" src="../Birde.Cache.js"></script>
@@ -46,105 +47,18 @@
 					40 : 90
 				});
 
-			B("#test1")
+			B("#test1, #test2")
 				.setParent("#test0");
 
-			B("#test2")
-				.setParent("#test0");
+			B("#test0 > .testClass")
+				.attr("h", 100);
 
-			/*
-			B("#test1")
-				.attr({
-					x : 60,
-					y : -10,
-					h : 60,
-					w : 60,
-					angle : 0
-				})
-				.bind("step", function(dt)
+			B(".testClass")
+				.bind("contentloadupdate", function(Loaded, Total)
 				{
-					this.angle += dt * 5;
-
-					this.x = Math.cos(this.angle) * 100;
-
-					this.y = Math.sin(this.angle) * 100;
-				})
-				.setParent("#test0");
-
-			B("#test2")
-				.attr({
-					x : 60,
-					y : 60,
-					h : 30,
-					w : 30,
-					angle : 0
-				})
-				.bind("step", function(dt)
-				{
-					this.angle += dt * 10;
-
-					this.x = Math.cos(this.angle) * 100;
-
-					this.y = Math.sin(this.angle) * 100;
-				})
-				.setParent("#test1");
-
-				B("#test3")
-				.attr({
-					x : 60,
-					y : 60,
-					h : 10,
-					w : 10,
-					angle : 0
-				})
-				.bind("step", function(dt)
-				{
-					this.angle += dt * 15;
-
-					this.x = Math.cos(this.angle) * 100;
-
-					this.y = Math.sin(this.angle) * 100;
-				})
-				.setParent("#test2");
-				*/
-
-				/*
-				.bind("keydown", function()
-				{
-					this.move({
-						x : 200,
-						y : 0
-					});
-				})
-				*/
-
-				/*
-				.bind("step", function(dt)
-				{
-					this.move({
-						x : 80,
-						y : 10
-					});
+					console.log(Loaded / Total * 100);
 				});
-				*/
 
-			// Multi-class enemy test
-			/*
-			B.Actor("poopy", {
-				class : "SomeEnemy SomeOtherEnemy",
-				w : 50,
-				h : 300
-			}).bind("draw", function(d)
-			{
-				d.DrawBounds(this);
-			}).bind("step", function(dt)
-			{
-				this.move({
-					x : 20,
-					y : 10
-				});
-			});
-			*/
 
 			B.ToggleFullScreen(); // disabled because broken in firefox
 			B.Start();

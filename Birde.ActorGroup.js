@@ -221,7 +221,11 @@ ActorGroup.prototype.find = function(selector)
 	var s;
 	while (s = selector.Next())
 	{
-		if (s[0] == ".")
+		if ( s[0] == "*" )
+		{
+			result = new ActorGroup( WorkingGroup );
+		}
+		else if (s[0] == ".")
 		{
 			// class selector
 			result = WorkingGroup.findByClass( s.substr(1) );
@@ -230,6 +234,18 @@ ActorGroup.prototype.find = function(selector)
 		{
 			// id selector
 			result = WorkingGroup.findById( s.substr(1) );
+		}
+		else if (s[0] == "[")
+		{
+			var attrSelector = selector.ParseAttributeSelector(s);
+
+			if (attrSelector != null)
+			{
+				if (attrSelector.attr && attrSelector.value)
+					result = WorkingGroup.findByAttributeValue(attrSelector.attr, attrSelector.value);
+				else if (attrSelector.attr && !attrSelector.value)
+					result = WorkingGroup.findByHasAttribute(attrSelector.attr);
+			}
 		}
 		else if (s[0] == ">")
 		{
@@ -264,6 +280,42 @@ ActorGroup.prototype.find = function(selector)
 }
 
 /**
+* Finds objects that carry the attribute - no value checks
+*/
+ActorGroup.prototype.findByHasAttribute = function(attr)
+{
+	var result = new ActorGroup();
+
+	var i = 0;
+	while ( i < this.length )
+	{
+		if (typeof this[i][attr] !== 'undefined')
+			result.push( this[i] );
+		i++;
+	}
+
+	return result;
+}
+
+/**
+* Finds objects that carry the attribute and have it set to a particular value
+*/
+ActorGroup.prototype.findByAttributeValue = function(attr, value)
+{
+	var result = new ActorGroup();
+
+	var i = 0;
+	while ( i < this.length )
+	{
+		if (typeof this[i][attr] !== 'undefined' && this[i][attr] == value)
+			result.push( this[i] );
+		i++;
+	}
+
+	return result;
+}
+
+/**
 * Returns objects whose parents share a common class
 */
 ActorGroup.prototype.findByParentClass = function(c)
@@ -287,8 +339,6 @@ ActorGroup.prototype.findByParentClass = function(c)
 ActorGroup.prototype.findByParent = function(parentID)
 {
 	var result = new ActorGroup();
-
-	console.log("Finding by parent.");
 
 	var i = 0;
 	while ( i < this.length )
@@ -337,7 +387,8 @@ ActorGroup.prototype.findByClass = function(c)
 }
 
 /**
-* Combines this ActorGroup with the provided one
+* Combines this ActorGroup with the provided one, returns a new ActorGroup
+* ( does NOT modify this one )
 */
 ActorGroup.prototype.combineWith = function(ag)
 {

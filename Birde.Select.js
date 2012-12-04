@@ -12,11 +12,11 @@ var Selector = function(selector)
 		// iterates the selector character by character to break it into manageable chunks
 
 		// adds letters, hyphens, and underscores (all valid parts of classes)
-		if ( selector[i].match(/[\w+\-\_]/gi) )
+		if ( selector[i].match(/[\w+\-\_\]=]/gi) )
 			this.parts[this.cur_index] += selector[i];
 
 		// Breaks and adds selector identifiers
-		else if (selector[i].match(/[\.#>\:]/g))
+		else if (selector[i].match(/[\.#>\:\[]/g))
 		{
 			if (i != 0)
 				this.cur_index++;
@@ -39,5 +39,35 @@ var Selector = function(selector)
 		}
 		else
 			return this.parts[this.iterator--];
+	}
+
+	/**
+	* Returns an attribute selector in its chunks
+	*/
+	this.ParseAttributeSelector = function(selector)
+	{
+		var attr, value;
+		var parsed = selector.match(/\w+/gi);
+
+		if (parsed.length == 1)
+		{
+			// type-only match - will check just for the existence of the attribute
+			return {
+				attr : parsed[0]
+			};
+		}
+		else if (parsed.length == 2)
+		{
+			// type/value match - will check for existence and a particular value
+			return {
+				attr : parsed[0],
+				value : parsed[1]
+			};
+		}
+		else
+		{
+			// whaaaat
+			return null;
+		}
 	}
 }

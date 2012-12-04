@@ -56,13 +56,23 @@ window.requestAnimFrame = (function(){
 		Drawing.ToggleFullscreen();
 	}
 
-
 	/**
 	* Start of advanced selector engine
 	*/
 	Birde.Select = function(selector)
 	{
-		return this.Scene.graph.find(selector);
+		// also testing some shit
+		var result = new ActorGroup();
+		
+		var selectors = selector.split(',');
+		var i = 0;
+		while ( i < selectors.length )
+		{
+			result = result.combineWith( this.Scene.graph.find(selectors[i]) );
+			i++;
+		}
+
+		return result;
 	}
 
 	////////////////////////////////////////////////////////
@@ -78,11 +88,6 @@ window.requestAnimFrame = (function(){
 	}
 
 	/**
-	* Contains any third-party modules.
-	*/
-	Birde.mod = {}
-
-	/**
 	* Birde.Core
 	* Contains important game methods.
 	*/
@@ -95,12 +100,7 @@ window.requestAnimFrame = (function(){
 		init : function(props)
 		{
 			var Options = Birde.extend(props, Defaults);
-
-			for (var key in Birde.mod)
-			{
-				Birde.mod[key].call(this);
-			}
-
+			
 			Drawing.init(Options);
 			Input.init(Options);
 
