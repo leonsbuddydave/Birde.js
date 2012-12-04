@@ -3,13 +3,27 @@
 */
 var ActorGroup = function()
 {
-	//this.prototype = new Array();
-	for (var key in arguments)
+	if (arguments.length == 1 && arguments[0].type == "ActorGroup")
 	{
-		this.push(arguments[key]);
+		// Lets us easily clone an ActorGroup
+		var i = 0;
+		while ( i < arguments[0].length )
+		{
+			this.push( arguments[0][i] );
+			i++;
+		}
+	}
+	else
+	{
+		// Creates an entirely new ActorGroup
+		for (var key in arguments)
+		{
+			this.push(arguments[key]);
+		}
 	}
 }
 ActorGroup.prototype = new Array();
+ActorGroup.prototype.type = "ActorGroup";
 
 /**
 * Iterator method that lets us apply a method to the entirety of the ActorGroup.
@@ -189,4 +203,159 @@ ActorGroup.prototype.addComponent = function(c)
 	});
 
 	return this;
+}
+
+/**
+* Finds anything inside here
+*/
+ActorGroup.prototype.find = function(selector)
+{
+	var OriginalSet = new ActorGroup(this);
+
+	var WorkingGroup = new ActorGroup(this);
+
+	var selector = new Selector(selector);
+
+	var result = new ActorGroup();
+
+	var s;
+	while (s = selector.Next())
+	{
+		if (s[0] == ".")
+		{
+			// class selector
+			result = WorkingGroup.findByClass( s.substr(1) );
+		}
+		else if (s[0] == "#")
+		{
+			// id selector
+			result = WorkingGroup.findById( s.substr(1) );
+		}
+		else if (s[0] == ">")
+		{
+			// direct-child selector
+			var parent = selector.Next();
+
+			if (parent)
+			{
+				if (parent[0] == "#")
+					result = WorkingGroup.findByParent( parent.substr(1) );
+				else if (parent[0] == ".")
+					result = WorkingGroup.findByParentClass( parent.substr(1) );
+			}
+			else
+			{
+				console.log("Selector error in ActorGroup.find(): Attempted immediate descendent selector with no parent.");
+			}
+		}
+		else if (s[0] == ":")
+		{
+			// pseudo-class selector
+		}
+		else
+		{
+			// what the hell is this
+			console.log("Selector error in ActorGroup.find(): Unknown identifier \"" + s + "\".");
+		}
+
+		WorkingGroup = new ActorGroup(result);
+	}
+	return result;
+}
+
+/**
+* Returns objects whose parents share a common class
+*/
+ActorGroup.prototype.findByParentClass = function(c)
+{
+	var result = new ActorGroup();
+
+	var i = 0;
+	while ( i < this.length )
+	{
+		if (this[i].parent !== null && this[i].parent.class.indexOf(c) > -1)
+			result.push( this[i] );
+		i++;
+	}
+
+	return result;
+}
+
+/**
+* Returns objects that share a common parent
+*/
+ActorGroup.prototype.findByParent = function(parentID)
+{
+	var result = new ActorGroup();
+
+	console.log("Finding by parent.");
+
+	var i = 0;
+	while ( i < this.length )
+	{
+		if ( this[i].parent !== null && this[i].parent.id == parentID )
+			result.push( this[i] );
+		i++;
+	}
+
+	return result;
+}
+
+/**
+* Isolates an actor by id
+*/
+ActorGroup.prototype.findById = function(id)
+{
+	var result = new ActorGroup();
+
+	var i = 0;
+	while ( i < this.length )
+	{
+		if ( this[i].id == id )
+			result.push( this[i] );
+		i++;
+	}
+
+	return result;
+}
+
+/**
+* Isolates a single class
+*/
+ActorGroup.prototype.findByClass = function(c)
+{
+	var result = new ActorGroup();
+
+	var i = 0;
+	while (i < this.length)
+	{
+		if (this[i].class.indexOf(c) != -1)
+			result.push( this[i] );
+		i++;
+	}
+	return result;
+}
+
+/**
+* Combines this ActorGroup with the provided one
+*/
+ActorGroup.prototype.combineWith = function(ag)
+{
+	var result = new ActorGroup();
+
+	var i = 0;
+	while ( i < ag.length )
+	{
+		result.push( ag[i] );
+		i++;
+	}
+
+	i = 0;
+	while ( i < this.length )
+	{
+		result.push( this[i] );
+		i++;
+	}
+
+	return result;
 }

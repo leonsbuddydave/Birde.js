@@ -24,8 +24,7 @@ window.requestAnimFrame = (function(){
 	*/
 	var Birde = function(selector)
 	{
-		selector = selector || "*";
-		return new Birde.fn.select(selector);
+		return Birde.Select(selector);
 	}
 
 	/**
@@ -57,6 +56,14 @@ window.requestAnimFrame = (function(){
 		Drawing.ToggleFullscreen();
 	}
 
+
+	/**
+	* Start of advanced selector engine
+	*/
+	Birde.Select = function(selector)
+	{
+		return this.Scene.graph.find(selector);
+	}
 
 	////////////////////////////////////////////////////////
 	w.Tick = 15;
@@ -112,17 +119,7 @@ window.requestAnimFrame = (function(){
 		{
 			if (selector == "*")
 			{
-				// Converts the scenegraph into an ActorGroup result
-				var result = new ActorGroup();
-
-				var A = Birde.Scene.graph;
-
-				for (var key in A)
-				{
-					result.push(A[key]);
-				}
-
-				return result;
+				return Birde.Scene.graph;
 			}
 			else if (selector[0] == ".")
 			{

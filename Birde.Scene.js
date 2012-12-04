@@ -6,7 +6,9 @@ var Scene = function()
 		y : 0
 	}
 
-	this.graph = [];
+	this.graph = new ActorGroup();
+
+	this.graph.SceneRoot = true;
 
 	this.id_map = {};
 
@@ -35,25 +37,21 @@ var Scene = function()
 	*/
 	this.SelectByClass = function(c)
 	{
-		if (!this.hasChanged())
+		if (!this.hasChanged() && this.Cache.isCached(c))
 			return this.getCachedQuery(c);
-
-		var result = new ActorGroup();
-
-		if (typeof this.class_map[c] == 'undefined' || this.class_map[c].length == 0)
-			return result;
 		else
 		{
-			var i = 0;
-			while (i < this.class_map[c].length)
+			if (typeof this.class_map[c] == 'undefined' || this.class_map[c].length == 0)
 			{
-				result.push( this.graph[ this.class_map[c][i] ] );
-				i++;
+				console.log("Returning blank-ass ActorGroup.");
+				return new ActorGroup();
 			}
-
-			this.Cache.SaveQuery(c, result);
-
-			return result;
+			else
+			{
+				var result = this.graph.findByClass(c);
+				this.Cache.SaveQuery(c, result);
+				return result;
+			}
 		}
 	}
 
@@ -73,6 +71,14 @@ var Scene = function()
 	}
 
 	/**
+	* Checks if a given query has already been cached.
+	*/
+	this.Cache.isCached = function(selector)
+	{
+		return (typeof this.Queries[selector] !== 'undefined')
+	}
+
+	/**
 	* Returns the cached query if it exists and the scene hasn't changed
 	* Otherwise returns null  
 	*/
@@ -80,10 +86,8 @@ var Scene = function()
 	{
 		if (typeof this.Cache.Queries[selector] !== 'undefined' && !this.hasChanged())
 		{
-			console.log("Hell yeah, returning cached query.");
 			return this.Cache.Queries[selector];
 		}
-
 		return null;
 	}
 
