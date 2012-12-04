@@ -71,7 +71,7 @@ B(".testClass")
 	.find(".otherClass")
 	.bind("step", function()
 	{
-		// called on the step function
+		// called on the step event
 	});
 ```
 
