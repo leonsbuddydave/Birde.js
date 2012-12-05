@@ -108,6 +108,8 @@ ActorGroup.prototype.move = function(speed, angle)
 
 /**
 * Usability wrapper for binding simple key movement to an ActorGroup.
+* we might see this method moved into an ease-of-use lib with other
+* methods that aren't necessary to core
 */
 ActorGroup.prototype.keyMovement = function(speed, keydir)
 {
@@ -161,19 +163,6 @@ ActorGroup.prototype.setParent = function(parentID)
 
 		return this;
 	}
-}
-
-/**
-* Sugar for adding the same component to multiple actors
-*/
-ActorGroup.prototype.addComponent = function(c)
-{
-	this.each(function(e)
-	{
-		e.addComponent(c);
-	});
-
-	return this;
 }
 
 /**
@@ -380,4 +369,14 @@ ActorGroup.prototype.combineWith = function(ag)
 	}
 
 	return result;
+}
+
+ActorGroup.prototype.setCollisionShape = function(shape)
+{
+	var i = 0;
+	while ( i < this.length )
+	{
+		this[i].collisionShape = shape;
+		i++;
+	}
 }

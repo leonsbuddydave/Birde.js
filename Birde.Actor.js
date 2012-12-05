@@ -14,17 +14,19 @@ var Actor = function(id, props)
 		h : 0,
 		class : "default",
 
-		// maintains a list of all the bindings this Actor is registered for
+		// maintains a list of all the bindings this Actor is registered for // NOT IMPLEMENTED YET
 		bindings : [],
 
 		// all actors have no parent by default
-		parent : null
+		parent : null,
 	});
 
 	// then extends the actor object with those properties - there's probably a cheap way to reduce this to a one-step process
 	Birde.extend(this, props);
 
 	this.class = props.class.split(" ");
+
+	this.collisionShape = new Shape.Rectangle(this.x, this.y, this.w, this.h);
 
 	/**
 	* Returns the position that this object should be drawn on the screen in - takes into account the position of the world, its parent's position,

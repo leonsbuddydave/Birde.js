@@ -48,17 +48,17 @@ var Input =
 			i++;
 		}
 
-		document.body.onkeydown = function(e)
+		document.body.addEventListener("keydown", function(e)
 		{
 			// Sets key-down state
 			Input.Keystates[e.keyCode] = true;
-		}
+		});
 
-		document.body.onkeyup = function(e)
+		document.body.addEventListener("keyup", function(e)
 		{
 			// Sets key-up state
 			Input.Keystates[e.keyCode] = false;
-		}
+		});
 	},
 
 	/**

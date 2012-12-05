@@ -13,19 +13,6 @@ var EventRegistry =
 }
 
 /**
-* This is where subevents (such as individual key presses) are bound to and called from.
-*/
-var SubEventRegistry =
-{
-	draw : [],
-	step : [],
-	keydown : [],
-	keyup : [],
-	keypress : [],
-	keyisdown : []
-}
-
-/**
 * Manually fires an event, without arguments.
 */
 var FireEvent = function(event)

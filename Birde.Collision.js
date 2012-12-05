@@ -7,11 +7,7 @@ var Collision =
 
 	step : function(dt)
 	{
-		for (var key in EventRegistry.collision)
-		{
-			var a = EventRegistry.collision[key];
-			//console.log("Checking " + a.target.id + " for collision.");
-		}
+		// Here we'll check through everything registered in EventRegistry.collision	
 	},
 
 	isColliding : function(one, two)
