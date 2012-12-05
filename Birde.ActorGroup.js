@@ -75,52 +75,17 @@ ActorGroup.prototype.attr = function()
 */
 ActorGroup.prototype.bind = function(event, response)
 {
-	// Check if we also have a subevent class to deal with
-	if (event.indexOf("[") != -1 && event.indexOf("]") != -1)
+	// standard bind event
+	if (typeof EventRegistry[event] == 'undefined')
+		EventRegistry[event] = [];
+
+	this.each(function(e)
 	{
-		// We also have a subevent to use
-		var subEventStart = event.indexOf("[");
-		var subEventEnd = event.indexOf("]");
-
-		var mainEvent = event.substr(0, subEventStart);
-		var subEvent = event.substr(subEventStart + 1, subEventEnd - subEventStart - 1);
-
-		// standard bind event
-		if (typeof EventRegistry[mainEvent] == 'undefined')
-			EventRegistry[mainEvent] = {};
-
-		// Subevent container
-		if (typeof SubEventRegistry[mainEvent] == 'undefined')
-			SubEventRegistry[mainEvent] = {};
-
-		if (typeof SubEventRegistry[mainEvent][subEvent] == 'undefined')
-			SubEventRegistry[mainEvent][subEvent] = {};
-
-		this.each(function(e)
-		{
-			SubEventRegistry[mainEvent][subEvent][e.id] =
-			{
-				target : e,
-				response : response
-			}
+		EventRegistry[event].push({
+			target : e,
+			response : response
 		});
-
-	}
-	else
-	{
-		// standard bind event
-		if (typeof EventRegistry[event] == 'undefined')
-			EventRegistry[event] = {};
-
-		this.each(function(e)
-		{
-			EventRegistry[event][e.id] =
-			{
-				target : e,
-				response : response
-			}
-		});
-	}
+	});
 	return this;
 }
 
@@ -156,16 +121,20 @@ ActorGroup.prototype.keyMovement = function(speed, keydir)
 		var vx = speed * Math.cos( BMath.degToRad(keydir[key]) );
 		var vy = speed * Math.sin( BMath.degToRad(keydir[key]) );
 
-		(function(vx, vy, ag)
+		(function(vx, vy, ag, keyCode)
 		{
-			ag.bind("keydown[" + keyCode + "]", function()
+			ag.bind("keydown", function(evt)
 			{
-				this.move({
-					x : vx,
-					y : vy
-				});
+				if (evt.keyCode == keyCode)
+				{
+					console.log("this.move");
+					this.move({
+						x : vx,
+						y : vy
+					});
+				}
 			});
-		})(vx, vy, this);
+		})(vx, vy, this, keyCode);
 	}
 
 	return this;

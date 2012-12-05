@@ -22,7 +22,7 @@
 			});
 
 			var i = 0;
-			while (i < 5)
+			while (i < 10)
 			{
 				B.Add(new Actor("test" + i, {
 					w : 30,
@@ -63,6 +63,29 @@
 				.bind("contentloadupdate", function(Loaded, Total)
 				{
 					console.log(Loaded / Total * 100);
+				});
+
+			// exmaple of one-event-multiple-binds
+			B("#test4")
+				.bind("step", function()
+				{
+					this.move({
+						x : 10,
+						y : 0
+					})
+				})
+				.bind("step", function()
+				{
+					this.move({
+						x : 0,
+						y : 20
+					});
+				});
+
+			B("#test5")
+				.bind("keydown", function(keycode)
+				{
+					//console.log(keycode);
 				});
 
 

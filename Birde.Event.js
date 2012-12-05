@@ -3,13 +3,13 @@
 */
 var EventRegistry =
 {
-	draw : {},
-	step : {},
-	keydown : {},
-	keyup : {},
-	keypress : {},
-	contentloadupdate : {},
-	contentload : {}
+	draw : [],
+	step : [],
+	keydown : [],
+	keyup : [],
+	keypress : [],
+	contentloadupdate : [],
+	contentload : []
 }
 
 /**
@@ -17,12 +17,12 @@ var EventRegistry =
 */
 var SubEventRegistry =
 {
-	draw : {},
-	step : {},
-	keydown : {},
-	keyup : {},
-	keypress : {},
-	keyisdown : {}
+	draw : [],
+	step : [],
+	keydown : [],
+	keyup : [],
+	keypress : [],
+	keyisdown : []
 }
 
 /**
@@ -30,9 +30,16 @@ var SubEventRegistry =
 */
 var FireEvent = function(event)
 {
-	for (var key in EventRegistry[event])
+	var i = 0;
+	while (i < EventRegistry[event].length)
 	{
-		var a = EventRegistry[event][key];
-		a.response.call(a.target);
+		var a = EventRegistry[event][i];
+		a.response.call(a.target, arguments[1]);
+		i++;
 	}
+}
+
+function Event(overrides)
+{
+	this.keyCode = overrides.keyCode || 0;
 }

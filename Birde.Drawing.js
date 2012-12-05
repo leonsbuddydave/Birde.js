@@ -48,7 +48,7 @@ var Drawing =
 
 	Cache : new Cache(),
 
-	Step : function()
+	step : function()
 	{
 		this.Clear();
 

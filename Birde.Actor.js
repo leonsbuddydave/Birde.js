@@ -14,9 +14,6 @@ var Actor = function(id, props)
 		h : 0,
 		class : "default",
 
-		// tracks all the components relevant to this Actor
-		components : [],
-
 		// maintains a list of all the bindings this Actor is registered for
 		bindings : [],
 
@@ -65,35 +62,6 @@ var Actor = function(id, props)
 	}
 
 	/**
-	* Adds a component. Components are functions that define snippets of behavior.
-	*/
-	this.addComponent = function(c)
-	{
-		if (!this.isBoundTo("step"))
-		{
-			// if this does not already have a step event, bind it to a blank one
-			// kind of hacky at this point but prevents objects from being needlessly updated
-			Birde("#" + this.id).bind("step", function(){});
-		}
-
-
-		this.components.push(c);
-
-		return this;
-	}
-
-	/**
-	*	Step through all components
-	*/
-	this.playComponents = function(dt)
-	{
-		for (var key in this.components)
-		{
-			this.components[key].call(this, dt);
-		}
-	}
-
-	/**
 	* Returns true if this actor is bound to the requested event
 	*/
 	this.isBoundTo = function(binding)
@@ -122,8 +90,6 @@ var Actor = function(id, props)
 	{
 		var x = dir.x * Tick;
 		var y = dir.y * Tick;
-
-		console.log(x);
 
 		this.x += x;
 		this.y += y;

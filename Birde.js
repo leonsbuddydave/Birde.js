@@ -136,20 +136,9 @@ window.requestAnimFrame = (function(){
 
 			Collision.step(Tick);
 
-			// Call the step method of every Actor that signed up for it
-			for (key in EventRegistry.step)
-			{
-				var a = EventRegistry.step[key];
-				a.response.call(a.target, Tick);
+			FireEvent("step");
 
-				// This last part might be a feature or need some reworking
-				// updating components here ensures that components only occur on objects
-				// that need to do processing anyway and have a step event
-				// that way we avoid updating nonexistent components on static objects
-				a.target.playComponents(Tick);
-			}
-
-			Drawing.Step();
+			Drawing.step();
 
 			requestAnimFrame(Birde.fn.step);
 		}

@@ -107,26 +107,15 @@ var Input =
 	*/
 	step : function(dt)
 	{
-		// Fires all the generic key events
-		for (var key in EventRegistry.keydown)
-		{
-			if (this.isKeyDown())
-			{
-				var a = EventRegistry.keydown[key];
-				a.response.call(a.target);
-			}
-		}
 
-		// Fires all the specific key events
 		var keysDown = this.getAllKeysDown();
 		var i = 0;
 		while (i < keysDown.length)
 		{
-			for (var key in SubEventRegistry.keydown[keysDown[i]])
-			{
-				var a = SubEventRegistry.keydown[keysDown[i]][key];
-				a.response.call(a.target);
-			}
+			var evt = new Event({
+				keyCode : keysDown[i]
+			});
+			FireEvent("keydown", evt);
 			i++;
 		}
 	}
