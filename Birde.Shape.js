@@ -65,6 +65,9 @@ var Shape =
 	{
 		this.prototype = new Shape.Polygon();
 		this.radius = radius;
+
+		this.centerPoint = new Point(radius, radius);
+
 		this.type = "circle";
 	}
 }

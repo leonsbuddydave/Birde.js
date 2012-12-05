@@ -51,8 +51,11 @@ var Collision =
 
 	circleOnCircle : function(one, two)
 	{
-		// not implemented
-		return false;
+		// implemented, untested though
+		shapeOne = one.collisionShape;
+		shapeTwo = two.collisionShape;
+
+		return (shapeOne.radius + shapeTwo.radius < BMath.distanceBetween( shapeOne.centerPoint, shapeTwo.centerPoint ) )
 	},
 
 	rectangleOnRectangle : function(one, two)
