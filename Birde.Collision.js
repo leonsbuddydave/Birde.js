@@ -66,6 +66,7 @@ var Collision =
 		var posTwo = two.getScreenPos();
 		var r2 = new Shape.Rectangle( posTwo.x + shapeTwo.x1, posTwo.y + shapeTwo.y1, shapeTwo.w, shapeTwo.h );
 
+		// check the opposite, return the negation - much faster/simpler
 		return !(
 			r1.x1 > r2.x2 ||
 			r1.y1 > r2.y2 ||
