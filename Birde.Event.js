@@ -32,7 +32,7 @@ var FireEvent = function(event)
 */
 var FireEventOnActor = function(event, index)
 {
-	if (!event || !index)
+	if (typeof event == 'undefined' || typeof index == 'undefined')
 		return 0;
 
 	var a = EventRegistry[event][index];

@@ -36,7 +36,6 @@ var Shape =
 	{
 		// Arguments object should contain all points
 		this.points = Array.prototype.slice.call(arguments);
-		this.type = "polygon";
 	},
 
 	/*
@@ -54,8 +53,6 @@ var Shape =
 		
 		this.w = w;
 		this.h = h;
-
-		this.type = "rectangle";
 	},
 
 	/*
@@ -67,8 +64,6 @@ var Shape =
 		this.radius = radius;
 
 		this.centerPoint = new Point(radius, radius);
-
-		this.type = "circle";
 	}
 }
 

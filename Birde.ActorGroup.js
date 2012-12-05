@@ -3,7 +3,7 @@
 */
 var ActorGroup = function()
 {
-	if (arguments.length == 1 && arguments[0].type == "ActorGroup")
+	if (arguments.length == 1 && arguments[0] instanceof ActorGroup)
 	{
 		// Lets us easily clone an ActorGroup
 		var i = 0;
@@ -23,7 +23,6 @@ var ActorGroup = function()
 	}
 }
 ActorGroup.prototype = new Array();
-ActorGroup.prototype.type = "ActorGroup";
 
 /**
 * Iterator method that lets us apply a method to the entirety of the ActorGroup.

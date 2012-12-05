@@ -30,15 +30,15 @@ var Collision =
 		shapeOne = one.collisionShape;
 		shapeTwo = two.collisionShape;
 
-		if (shapeOne.type == "rectangle" && shapeTwo.type == "rectangle")
+		if (shapeOne instanceof Shape.Rectangle && shapeTwo instanceof Shape.Rectangle)
 		{
 			return this.rectangleOnRectangle(one, two);
 		}
-		else if (shapeOne.type == "circle" && shapeTwo.type == "circle")
+		else if (shapeOne instanceof Shape.Circle && shapeTwo instanceof Shape.Circle)
 		{
 			return this.circleOnCircle(one, two);
 		}
-		else if (shapeOne.type == "polygon" && shapeTwo.type == "polygon")
+		else if (shapeOne instanceof Shape.Polygon && shapeTwo instanceof Shape.Polygon)
 		{
 			return this.polygonOnPolygon(one, two);
 		}

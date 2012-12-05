@@ -42,7 +42,7 @@
 			B("#test0")
 				.collision(function()
 				{
-					console.log("Collided!");
+					console.log("test0 collision.");
 				})
 				.keyMovement(500,
 				{
@@ -60,6 +60,8 @@
 				.attr("h", 100);
 
 			// exmaple of one-event-multiple-binds
+			// notice how we can bind to the same event multiple times and they'll all get executed
+			// in the order they were bound
 			B("#test4")
 				.step(function()
 				{
@@ -79,11 +81,12 @@
 			B("#test5")
 				.collision(function(actor)
 				{
-					console.log("Collision with " + actor.id);
+					// collision code goes here
+					console.log("test5 collision.");
 				});
 
 
-			B.ToggleFullScreen(); // disabled because broken in firefox
+			B.ToggleFullScreen();
 			B.Start();
 		}
 
