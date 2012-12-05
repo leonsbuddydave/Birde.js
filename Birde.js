@@ -61,10 +61,12 @@ window.requestAnimFrame = (function(){
 	*/
 	Birde.Select = function(selector)
 	{
+		selector = selector || "*";
 		// also testing some shit
 		var result = new ActorGroup();
 		
 		var selectors = selector.split(',');
+
 		var i = 0;
 		while ( i < selectors.length )
 		{
@@ -100,7 +102,7 @@ window.requestAnimFrame = (function(){
 		init : function(props)
 		{
 			var Options = Birde.extend(props, Defaults);
-			
+
 			Drawing.init(Options);
 			Input.init(Options);
 
@@ -109,62 +111,6 @@ window.requestAnimFrame = (function(){
 			Birde.Initialized = true;
 
 			return this;
-		},
-
-		/**
-		* Returns an ActorGroup containing actors matching the provided query.
-		* @param (String) selector - CSS-style selector string
-		*/
-		select : function(selector, props)
-		{
-			if (selector == "*")
-			{
-				return Birde.Scene.graph;
-			}
-			else if (selector[0] == ".")
-			{
-				// Searches for all elements containing the provided class
-				var classSelector = selector.replace(/\./g, "").split(' ');
-
-				// Class selection
-				var results = new ActorGroup();
-
-				var A = Birde.Scene.graph;
-
-				var i = 0;
-				while (i < A.length)
-				{
-					var a = A[i];
-
-					var matchedClasses = 0;
-
-					var c = 0;
-					while (c < a.class.length)
-					{
-						if (classSelector.indexOf( a.class[c] ) != -1)
-							matchedClasses++;
-
-						c++;
-					}
-
-					if (matchedClasses == classSelector.length)
-						results.push(a);
-
-					i++;
-				}
-
-				return results;
-			}
-			else if (selector[0] == "#")
-			{
-				var id = selector.replace("#", "");
-
-				return Birde.Scene.SelectById(id);				
-			}
-			else
-			{
-				return new ActorGroup();
-			}
 		},
 
 		/**
@@ -187,6 +133,8 @@ window.requestAnimFrame = (function(){
 			lastFrameTime = newFrameTime;
 
 			Input.step(Tick);
+
+			Collision.step(Tick);
 
 			// Call the step method of every Actor that signed up for it
 			for (key in EventRegistry.step)

@@ -25,11 +25,14 @@ var SubEventRegistry =
 	keyisdown : {}
 }
 
-var FireEvent = function(event, args)
+/**
+* Manually fires an event, without arguments.
+*/
+var FireEvent = function(event)
 {
 	for (var key in EventRegistry[event])
 	{
 		var a = EventRegistry[event][key];
-		a.response.call(a.target, args);
+		a.response.call(a.target);
 	}
 }

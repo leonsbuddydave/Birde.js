@@ -16,7 +16,7 @@ var Selector = function(selector)
 			this.parts[this.cur_index] += selector[i];
 
 		// Breaks and adds selector identifiers
-		else if (selector[i].match(/[\.#>\:\[]/g))
+		else if (selector[i].match(/[\.#>\:\[\*]/g))
 		{
 			if (i != 0)
 				this.cur_index++;

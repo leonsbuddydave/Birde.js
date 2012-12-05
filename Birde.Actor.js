@@ -123,6 +123,8 @@ var Actor = function(id, props)
 		var x = dir.x * Tick;
 		var y = dir.y * Tick;
 
+		console.log(x);
+
 		this.x += x;
 		this.y += y;
 

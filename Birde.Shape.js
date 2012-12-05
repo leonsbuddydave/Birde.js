@@ -1,10 +1,34 @@
 /**
-* Birde.Geometry module
+* Birde.Shape module
 * Contains definitions for shapes - used primarily for collision.
 */
 
-var Geometry =
+var Shape =
 {
+	/**
+	* 
+	*/
+	Point : function(x, y)
+	{
+		this[0] = x;
+		this[1] = y;
+
+		this.x = this[0];
+		this.y = this[1];
+
+		this.setX = function(x)
+		{
+			this.x = x;
+			this[0] = x;
+		}
+
+		this.setY = function(y)
+		{
+			this.y = y;
+			this[1] = y;
+		}
+	},
+
 	/**
 	* Vague definition for a polygon of any number of points.
 	*/
@@ -12,7 +36,6 @@ var Geometry =
 	{
 		// Arguments object should contain all points
 		this.points = Array.prototype.slice.call(arguments);
-
 		this.type = "polygon";
 	},
 
@@ -22,9 +45,15 @@ var Geometry =
 	Rectangle : function(x, y, w, h)
 	{
 
-		this.prototype = new Geometry.Polygon();
+		this.prototype = new Shape.Polygon();
 
-		this.points = new Geometry.Polygon(x, y, x + w, x + h).points;
+		this.x1 = x;
+		this.y1 = y;
+		this.x2 = x + w;
+		this.y2 = y + h;
+		
+		this.w = w;
+		this.h = h;
 
 		this.type = "rectangle";
 	},
@@ -34,10 +63,10 @@ var Geometry =
 	*/
 	Circle : function(radius)
 	{
-		this.prototype = new Geometry.Polygon();
-
+		this.prototype = new Shape.Polygon();
 		this.radius = radius;
-
 		this.type = "circle";
 	}
 }
+
+Shape.Point.prototype = new Array();

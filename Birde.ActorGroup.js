@@ -131,8 +131,8 @@ ActorGroup.prototype.move = function(speed, angle)
 {
 	var x, y;
 
-	x = Math.cos( Birde.Math.degToRad(angle) ) * speed;
-	y = Math.cos( Birde.Math.degToRad(angle) ) * speed;
+	x = Math.cos( Birde.Math.degToRad(angle) ) * speed * Tick;
+	y = Math.cos( Birde.Math.degToRad(angle) ) * speed * Tick;
 
 	this.each(function(e)
 	{
@@ -167,6 +167,8 @@ ActorGroup.prototype.keyMovement = function(speed, keydir)
 			});
 		})(vx, vy, this);
 	}
+
+	return this;
 }
 
 /**
@@ -181,7 +183,7 @@ ActorGroup.prototype.setParent = function(parentID)
 	}
 	else
 	{
-		var parent = new Birde.fn.select(parentID)[0];
+		var parent = Birde.Select(parentID)[0];
 
 		this.each(function(e)
 		{
@@ -221,7 +223,7 @@ ActorGroup.prototype.find = function(selector)
 	var s;
 	while (s = selector.Next())
 	{
-		if ( s[0] == "*" )
+		if (s[0] == "*")
 		{
 			result = new ActorGroup( WorkingGroup );
 		}
