@@ -75,17 +75,28 @@ ActorGroup.prototype.attr = function()
 */
 ActorGroup.prototype.bind = function(event, response)
 {
-	// standard bind event
-	if (typeof EventRegistry[event] == 'undefined')
-		EventRegistry[event] = [];
+	var events = event.split(' ');
 
-	this.each(function(e)
+	var i = 0;
+	while (i < events.length)
 	{
-		EventRegistry[event].push({
-			target : e,
-			response : response
+		var ev = events[i];
+
+		if (typeof EventRegistry[ev] == 'undefined')
+			EventRegistry[ev] = [];
+
+		this.each(function(e)
+		{
+			EventRegistry[ev].push({
+				target : e,
+				response : response
+			});
 		});
-	});
+
+		i++;
+	}
+
+
 	return this;
 }
 
@@ -129,7 +140,6 @@ ActorGroup.prototype.keyMovement = function(speed, keydir)
 			{
 				if (evt.keyCode == keyCode)
 				{
-					console.log("this.move");
 					this.move({
 						x : vx,
 						y : vy
@@ -172,17 +182,22 @@ ActorGroup.prototype.find = function(selector)
 {
 	var OriginalSet = new ActorGroup(this);
 
+	// WorkingGroup is the set currently being operated on
 	var WorkingGroup = new ActorGroup(this);
 
+	// Parses the selector into a selector object
 	var selector = new Selector(selector);
 
+	// Creates a blank actorgroup for us to fill
 	var result = new ActorGroup();
 
+	// Starts iterating through the parsed selector - selector iterates back to front, lowest scope to highest
 	var s;
 	while (s = selector.Next())
 	{
 		if (s[0] == "*")
 		{
+			// Returns the entirety of the WorkingGroup (wildcard selector)
 			result = new ActorGroup( WorkingGroup );
 		}
 		else if (s[0] == ".")
@@ -197,6 +212,7 @@ ActorGroup.prototype.find = function(selector)
 		}
 		else if (s[0] == "[")
 		{
+			// attribute selector
 			var attrSelector = selector.ParseAttributeSelector(s);
 
 			if (attrSelector != null)
@@ -371,6 +387,11 @@ ActorGroup.prototype.combineWith = function(ag)
 	return result;
 }
 
+/**
+* Passes a new collision shape to all the actors in this group - 
+* note that the shape is _copied by reference_ - any modifications 
+* made to one will affect all. Food for thought.
+*/
 ActorGroup.prototype.setCollisionShape = function(shape)
 {
 	var i = 0;
@@ -379,4 +400,39 @@ ActorGroup.prototype.setCollisionShape = function(shape)
 		this[i].collisionShape = shape;
 		i++;
 	}
+}
+
+//////////////////////////////////////////////////////////////////////
+// Beyond this point we'll be setting a bunch of "bind" aliases for ease-of-use
+// Nothing much down here is going to be engaging or useful in any meaningful way
+//////////////////////////////////////////////////////////////////////
+
+ActorGroup.prototype.step = function(callback)
+{
+	return this.bind("step", callback);
+}
+
+ActorGroup.prototype.draw = function(callback)
+{
+	return this.bind("draw", callback);
+}
+
+ActorGroup.prototype.keydown = function(callback)
+{
+	return this.bind("keydown", callback);
+}
+
+ActorGroup.prototype.keyup = function(callback)
+{
+	return this.bind("keyup", callback);
+}
+
+ActorGroup.prototype.keypress = function(callback)
+{
+	return this.bind("keypress", callback);
+}
+
+ActorGroup.prototype.collision = function(callback)
+{
+	return this.bind("collision", callback);
 }

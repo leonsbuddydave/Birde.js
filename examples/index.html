@@ -40,7 +40,7 @@
 			}
 
 			B("#test0")
-				.bind("collision", function()
+				.collision(function()
 				{
 					console.log("Collided!");
 				})
@@ -59,22 +59,16 @@
 			B("#test0 > .testClass")
 				.attr("h", 100);
 
-			B(".testClass")
-				.bind("contentloadupdate", function(Loaded, Total)
-				{
-					console.log(Loaded / Total * 100);
-				});
-
 			// exmaple of one-event-multiple-binds
 			B("#test4")
-				.bind("step", function()
+				.step(function()
 				{
 					this.move({
 						x : 10,
 						y : 0
 					})
 				})
-				.bind("step", function()
+				.step(function()
 				{
 					this.move({
 						x : 0,
@@ -83,9 +77,9 @@
 				});
 
 			B("#test5")
-				.bind("keydown", function(keycode)
+				.collision(function(actor)
 				{
-					//console.log(keycode);
+					console.log("Collision with " + actor.id);
 				});
 
 

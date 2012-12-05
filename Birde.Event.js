@@ -9,11 +9,12 @@ var EventRegistry =
 	keyup : [],
 	keypress : [],
 	contentloadupdate : [],
-	contentload : []
+	contentload : [],
+	collision : []
 }
 
 /**
-* Manually fires an event, without arguments.
+* Manually fires an event with up to one argument
 */
 var FireEvent = function(event)
 {
@@ -24,6 +25,18 @@ var FireEvent = function(event)
 		a.response.call(a.target, arguments[1]);
 		i++;
 	}
+}
+
+/**
+* Manually fires an event, one argument, on a single object
+*/
+var FireEventOnActor = function(event, index)
+{
+	if (!event || !index)
+		return 0;
+
+	var a = EventRegistry[event][index];
+	a.response.call(a.target, arguments[2]);
 }
 
 function Event(overrides)

@@ -26,7 +26,7 @@ var Actor = function(id, props)
 
 	this.class = props.class.split(" ");
 
-	this.collisionShape = new Shape.Rectangle(this.x, this.y, this.w, this.h);
+	this.collisionShape = new Shape.Rectangle(0, 0, this.w, this.h);
 
 	/**
 	* Returns the position that this object should be drawn on the screen in - takes into account the position of the world, its parent's position,
