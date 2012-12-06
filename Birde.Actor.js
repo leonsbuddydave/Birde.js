@@ -12,7 +12,7 @@ var Actor = function(id, props)
 		y : 0,
 		w : 0,
 		h : 0,
-		class : "default",
+		class : [],
 
 		// maintains a list of all the bindings this Actor is registered for // NOT IMPLEMENTED YET
 		bindings : [],
@@ -23,8 +23,6 @@ var Actor = function(id, props)
 
 	// then extends the actor object with those properties - there's probably a cheap way to reduce this to a one-step process
 	Birde.extend(this, props);
-
-	this.class = props.class.split(" ");
 
 	this.collisionShape = new Shape.Rectangle(0, 0, this.w, this.h);
 

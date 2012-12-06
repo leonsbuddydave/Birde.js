@@ -28,10 +28,10 @@
 					w : 30,
 					h : 30,
 					x : 50 * (i + 1),
-					y : 100,
-					class : "testClass"
+					y : 100
 				}))
-				.bind("draw", function(d)
+				.addClass("testClass")
+				.draw(function(d)
 				{
 					d.DrawBounds(this);
 				});
@@ -59,7 +59,7 @@
 			B("#test0 > .testClass")
 				.attr("h", 100);
 
-			// exmaple of one-event-multiple-binds
+			// example of one-event-multiple-binds
 			// notice how we can bind to the same event multiple times and they'll all get executed
 			// in the order they were bound
 			B("#test4")

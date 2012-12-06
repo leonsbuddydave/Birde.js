@@ -399,6 +399,41 @@ ActorGroup.prototype.setCollisionShape = function(shape)
 		this[i].collisionShape = shape;
 		i++;
 	}
+
+	return this;
+}
+
+/**
+* Adds a class
+*/
+ActorGroup.prototype.addClass = function(c)
+{
+	var i = 0;
+	while (i < this.length)
+	{
+		if (this[i].class.indexOf(c) == -1)
+		{
+			this[i].class.push(c);
+		}
+		i++;
+	}
+
+	return this;
+}
+
+/**
+* Removes a class
+*/
+ActorGroup.prototype.removeClass = function(c)
+{
+	var i = 0;
+	while (i < this.length)
+	{
+		this[i].class.splice(this[i].class.indexOf(c), 1);
+		i++
+	}
+
+	return this;
 }
 
 //////////////////////////////////////////////////////////////////////
