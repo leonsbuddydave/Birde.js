@@ -63,7 +63,7 @@ B(".testClass").attr("x", 200);
 
 will move all instances of "testClass" to "x = 200".
 
-Birde also supports method chaining for methods that don't support an explicit value:
+Birde also supports method chaining for methods that don't return an explicit value:
 
 ```javascript
 B(".testClass")
@@ -75,3 +75,5 @@ B(".testClass")
 	});
 ```
 
+Notes:
+- Runs like shit in Safari on Windows. Hasn't been tested on OSX Safari yet. It probably works better there because the windows version has to default to setTimeout for the game loop and OSX Safari 6 supports requestAnimationFrame.
