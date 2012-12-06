@@ -47,6 +47,7 @@
 			.collision(function(actor)
 			{
 				B(this).attr("falling", false);
+				this.backpedal();
 			})
 			.keydown(function(ev)
 			{

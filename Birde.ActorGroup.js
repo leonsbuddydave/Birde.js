@@ -111,6 +111,8 @@ ActorGroup.prototype.move = function(speed, angle)
 
 	this.each(function(e)
 	{
+		e.backupCoords();
+				
 		e.x += x;
 		e.y += y;
 	});

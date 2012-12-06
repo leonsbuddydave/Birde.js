@@ -12,9 +12,11 @@ var Actor = function(id, props)
 		y : 0,
 		w : 0,
 		h : 0,
+
 		class : [],
 
-		// maintains a list of all the bindings this Actor is registered for // NOT IMPLEMENTED YET
+		// maintains a list of all the bindings this Actor is registered for
+		// NOT IMPLEMENTED YET
 		bindings : [],
 
 		// all actors have no parent by default
@@ -23,6 +25,9 @@ var Actor = function(id, props)
 
 	// then extends the actor object with those properties - there's probably a cheap way to reduce this to a one-step process
 	Birde.extend(this, props);
+
+	this.lastX = 0;
+	this.lastY = 0;
 
 	this.collisionShape = new Shape.Rectangle(0, 0, this.w, this.h);
 }
@@ -52,6 +57,8 @@ Actor.prototype.isBoundTo = function(binding)
 */
 Actor.prototype.move = function(dir)
 {
+	this.backupCoords();
+	
 	var x = dir.x * Tick;
 	var y = dir.y * Tick;
 
@@ -83,6 +90,27 @@ Actor.prototype.getScreenPos = function()
 	pos.y += this.y;
 
 	return pos;
+}
+
+/**
+* Should be called by any method that modifies the actor's position
+* this way we can revert to position or perform operations using deltas
+*/
+Actor.prototype.backupCoords = function()
+{
+	this.lastX = this.x;
+	this.lastY = this.y;
+}
+
+/**
+* Will try to reset element to its last known position
+* will NOT work if the element's coordinates have been
+* affected manually
+*/
+Actor.prototype.backpedal = function()
+{
+	this.x = this.lastX;
+	this.y = this.lastY;
 }
 
 /**
