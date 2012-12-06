@@ -13,7 +13,7 @@ window.requestAnimFrame = (function(){
               window.msRequestAnimationFrame     || 
               function( callback )
               {
-                window.setTimeout(callback, 1000 / 60);
+                window.setTimeout(callback, 1000 / 100);
               };
     })();
 
@@ -24,6 +24,9 @@ window.requestAnimFrame = (function(){
 	*/
 	var Birde = function(selector)
 	{
+		if (selector instanceof Actor)
+			return new ActorGroup(selector);
+
 		return Birde.Select(selector);
 	}
 
@@ -132,9 +135,9 @@ window.requestAnimFrame = (function(){
 
 			lastFrameTime = newFrameTime;
 
-			Input.step(Tick);
-
 			Collision.step(Tick);
+
+			Input.step(Tick);
 
 			FireEvent("step");
 

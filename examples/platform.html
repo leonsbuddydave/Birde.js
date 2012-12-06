@@ -22,69 +22,62 @@
 				Canvas : "targetCanvas"
 			});
 
-			var i = 0;
-			while (i < 10)
+			B.Add(new Actor("player",
 			{
-				B.Add(new Actor("test" + i, {
-					w : 30,
-					h : 30,
-					x : 50 * (i + 1),
-					y : 100
-				}))
-				.addClass("testClass")
-				.draw(function(d)
-				{
-					d.DrawBounds(this);
-				});
-
-				i++;
-			}
-
-			B("#test0")
-				.collision(function()
-				{
-					console.log("test0 collision.");
-				})
-				.keyMovement(500,
-				{
-					37 : 180,
-					38 : 270,
-					39 : 0,
-					40 : 90
-				})
-				.attr("test", "testtest");
-
-			B("#test1, #test2")
-				.setParent("#test0");
-
-			B("#test0 > .testClass")
-				.attr("h", 100);
-
-			// example of one-event-multiple-binds
-			// notice how we can bind to the same event multiple times and they'll all get executed
-			// in the order they were bound
-			B("#test4")
-				.step(function()
-				{
-					this.move({
-						x : 10,
-						y : 0
-					})
-				})
-				.step(function()
+				x : 100,
+				y : 100,
+				w : 50,
+				h : 50,
+				falling : true,
+			}))
+			.draw(function(d)
+			{
+				d.DrawBounds(this);
+			})
+			.step(function(dt)
+			{
+				if (this.falling)
 				{
 					this.move({
 						x : 0,
-						y : 20
+						y : 800
 					});
-				});
-
-			B("#test5")
-				.collision(function(actor)
+				}
+			})
+			.collision(function(actor)
+			{
+				B(this).attr("falling", false);
+			})
+			.keydown(function(ev)
+			{
+				if (ev.keyCode == 32)
 				{
-					// collision code goes here
-					console.log("test5 collision.");
-				});
+					this.y = 100;
+					this.falling = true;
+				}
+			})
+			.keyMovement(1000, {
+				37 : 180,
+				39 : 0
+			});
+
+			B.Add(new Actor("floor",
+			{
+				x : 10,
+				y : 400,
+				w : 1000,
+				h : 100,
+				color : "#a00"
+			}))
+			.draw(function(d)
+			{
+				d.DrawBounds(this);
+			})
+			.collision(function(actor)
+			{
+
+			});
+
 
 
 			B.ToggleFullScreen();

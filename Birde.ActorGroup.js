@@ -106,8 +106,8 @@ ActorGroup.prototype.move = function(speed, angle)
 {
 	var x, y;
 
-	x = Math.cos( Birde.Math.degToRad(angle) ) * speed * Tick;
-	y = Math.cos( Birde.Math.degToRad(angle) ) * speed * Tick;
+	x = Math.cos( BMath.degToRad(angle) ) * speed * Tick;
+	y = Math.cos( BMath.degToRad(angle) ) * speed * Tick;
 
 	this.each(function(e)
 	{

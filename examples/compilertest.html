@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+	<head>
+		<script type="text/javascript" src="../Birde.Compiler.js"></script>
+		<script type="text/javascript">
+			var c = new Compiler(function()
+			{
+				console.log("Nature's first green is gold,");
+			},
+			function()
+			{
+				console.log("Her hardest hue to hold.");
+			},
+			function()
+			{
+				console.log("Her early leaf's a flower,");
+			},
+			function()
+			{
+				console.log("But only so an hour.");
+			},
+			function()
+			{
+				console.log("Then leaf subsides to leaf,");
+			},
+			function()
+			{
+				console.log("So Eden sank to grief,");
+			},
+			function()
+			{
+				console.log("So dawn goes down to day");
+			},
+			function()
+			{
+				console.log("Nothing gold can stay.");
+			});
+
+			// Executing the original compiled result.
+			f = c.compiledFunction;
+			f();
+
+			// Adding to the compiled function
+			c.add(function()
+			{
+				console.log("---A poem by Robert Frost.");
+			});
+
+			console.log("\nModified: \n");
+
+			// Executing the NEW VERSION :D
+			f = c.compiledFunction;
+			f();
+		</script>
+	</head>
+</html>

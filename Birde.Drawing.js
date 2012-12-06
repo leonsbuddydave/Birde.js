@@ -83,7 +83,7 @@ var Drawing =
 
 		var pos = actor.getScreenPos();
 
-		this.Context.fillRect(pos.x, pos.y, actor.w, actor.h);
+		this.Context.fillRect(~~(pos.x + 0.5), ~~(pos.y + 0.5), actor.w, actor.h);
 		this.Context.fill();
 	},
 

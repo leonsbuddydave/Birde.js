@@ -25,75 +25,87 @@ var Actor = function(id, props)
 	Birde.extend(this, props);
 
 	this.collisionShape = new Shape.Rectangle(0, 0, this.w, this.h);
+}
 
-	/**
-	* Returns the position that this object should be drawn on the screen in - takes into account the position of the world, its parent's position,
-	* and its own position within its parent's coordinate space. 
-	*/
-	this.getScreenPos = function()
+/**
+* Returns true if this Actor is part of a particular class.
+*/
+Actor.prototype.hasClass = function(c)
+{
+	if (this.class.indexOf(c) > -1)
+		return true;
+
+	return false;
+}
+
+/**
+* Returns true if this actor is bound to the requested event
+*/
+Actor.prototype.isBoundTo = function(binding)
+{
+	// Not implemented yet
+	return false;
+}
+
+/**
+* Moves this object based on the provided delta object.
+*/
+Actor.prototype.move = function(dir)
+{
+	var x = dir.x * Tick;
+	var y = dir.y * Tick;
+
+	this.x += x;
+	this.y += y;
+
+	return this;
+}
+
+/**
+* Returns the position that this object should be drawn on the screen in - takes into account the position of the world, its parent's position,
+* and its own position within its parent's coordinate space. 
+*/
+Actor.prototype.getScreenPos = function()
+{
+	// Returns the coordinates of the object relative to the world and any parents
+	var pos = {};
+	pos.x = Birde.Scene.Position.x;
+	pos.y = Birde.Scene.Position.y;
+
+	if (this.parent != null)
 	{
-		// Returns the coordinates of the object relative to the world and any parents
-		var pos = {};
-		pos.x = Birde.Scene.Position.x;
-		pos.y = Birde.Scene.Position.y;
-
-		if (this.parent != null)
-		{
-			var parentPos = this.parent.getScreenPos();
-			pos.x += parentPos.x;
-			pos.y += parentPos.y;
-		}
-
-		pos.x += this.x;
-		pos.y += this.y;
-
-		return pos;
+		var parentPos = this.parent.getScreenPos();
+		pos.x += parentPos.x;
+		pos.y += parentPos.y;
 	}
 
-	/**
-	* Returns true if this Actor is part of a particular class.
-	*/
-	this.hasClass = function(c)
-	{
-		if (this.class.indexOf(c) > -1)
-			return true;
+	pos.x += this.x;
+	pos.y += this.y;
 
+	return pos;
+}
+
+/**
+* Will try to predict if the given actor will undergo a collision
+* soon, given a new position
+*/
+Actor.prototype.predictCollision = function(optional_actorid, pointNewPosition)
+{
+	/*
+	* Not implemented yet:
+	* Create a dummy actor that sports only a bounding box and x/y
+	* bind it to the collision event temporarily and force a collision check
+	* return the result
+	*/
+}
+
+Actor.prototype.predictCollisionWith = function(actorid)
+{
+	// Possibly default to predictCollision if the actorid isn't provided,
+	// but that may result in some serious undefined behavior
+	if (typeof actorid == 'undefined')
 		return false;
-	}
 
-	/**
-	* Returns true if this actor is bound to the requested event
-	*/
-	this.isBoundTo = function(binding)
-	{
-		/*
-		if (typeof EventRegistry[binding][this.id] !== 'undefined')
-			return true;
 
-		return false;
-		*/
-	}
 
-	/**
-	* Removes this Actor from the scene entirely. Needs work to unbind everything the actor's done.
-	*/
-	this.destroy = function()
-	{
-		// Needs to unbind everything
-		Birde.fn.Scene.Actors[this.id] = "";
-	}
-
-	/**
-	* Moves this object based on the provided delta object.
-	*/
-	this.move = function(dir)
-	{
-		var x = dir.x * Tick;
-		var y = dir.y * Tick;
-
-		this.x += x;
-		this.y += y;
-
-		return this;
-	}
 }
