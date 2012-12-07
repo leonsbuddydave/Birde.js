@@ -75,6 +75,7 @@ ActorGroup.prototype.attr = function()
 ActorGroup.prototype.bind = function(event, response)
 {
 	var events = event.split(' ');
+	response = response || function(){};
 
 	var i = 0;
 	while (i < events.length)
@@ -94,9 +95,51 @@ ActorGroup.prototype.bind = function(event, response)
 
 		i++;
 	}
-
-
 	return this;
+}
+
+/**
+* Removes all bindings from these actors
+*/
+ActorGroup.prototype.unbindAll = function()
+{
+	var i = 0;
+	while (i < this.length)
+	{
+		for (var key in EventRegistry)
+		{
+			var j = EventRegistry[key].length;
+			while (j--)
+			{
+				if (EventRegistry[key][j].target.id == this[i].id)
+				{
+					EventRegistry[key].splice(j, 1);
+				}
+			}
+		}
+		i++;
+	}
+}
+
+/**
+* Removes the Actors' bindings to a particular event or set of events
+*/
+ActorGroup.prototype.unbind = function(event)
+{
+	var events = event.split(' ');
+	var i = 0;
+	while (i < this.length)
+	{
+		var j = EventRegistry[event].length;
+		while (j--)
+		{
+			if (EventRegistry[event][j].target.id == this[i].id)
+			{
+				EventRegistry[event].splice(j, 1);
+			}
+		}
+		i++;
+	}
 }
 
 /**
@@ -112,7 +155,7 @@ ActorGroup.prototype.move = function(speed, angle)
 	this.each(function(e)
 	{
 		e.backupCoords();
-				
+
 		e.x += x;
 		e.y += y;
 	});
@@ -135,19 +178,16 @@ ActorGroup.prototype.keyMovement = function(speed, keydir)
 		var vx = speed * Math.cos( BMath.degToRad(keydir[key]) );
 		var vy = speed * Math.sin( BMath.degToRad(keydir[key]) );
 
-		(function(vx, vy, ag, keyCode)
+		(function(speed, key, ag, keyCode)
 		{
 			ag.bind("keydown", function(evt)
 			{
 				if (evt.keyCode == keyCode)
 				{
-					this.move({
-						x : vx,
-						y : vy
-					});
+					this.moveToCollision(speed, key);
 				}
 			});
-		})(vx, vy, this, keyCode);
+		})(speed, keydir[key], this, keyCode);
 	}
 
 	return this;
@@ -342,7 +382,6 @@ ActorGroup.prototype.findById = function(id)
 			result.push( this[i] );
 		i++;
 	}
-
 	return result;
 }
 
@@ -401,7 +440,6 @@ ActorGroup.prototype.setCollisionShape = function(shape)
 		this[i].collisionShape = shape;
 		i++;
 	}
-
 	return this;
 }
 
@@ -470,5 +508,11 @@ ActorGroup.prototype.keypress = function(callback)
 
 ActorGroup.prototype.collision = function(callback)
 {
+	/**
+	* Binding an Actor to collision without a callback still adds it to
+	* the collision registry - this just means that other objects can collide
+	* with it, it just won't react
+	*/
+	callback = callback || function(){};
 	return this.bind("collision", callback);
 }

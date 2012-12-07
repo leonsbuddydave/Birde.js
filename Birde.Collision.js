@@ -25,6 +25,9 @@ var Collision =
 		}
 	},
 
+	/**
+	* Checks whether or not the two objects
+	*/
 	isColliding : function(one, two)
 	{
 		shapeOne = one.collisionShape;
@@ -49,6 +52,9 @@ var Collision =
 		}
 	},
 
+	/**
+	* Check out if some hot circle-on-circle action is going on
+	*/
 	circleOnCircle : function(one, two)
 	{
 		// implemented, untested though
@@ -58,6 +64,9 @@ var Collision =
 		return (shapeOne.radius + shapeTwo.radius < BMath.distanceBetween( shapeOne.centerPoint, shapeTwo.centerPoint ) )
 	},
 
+	/**
+	* Check out if some distinctly less-than-hot rect-on-rect action is going on
+	*/
 	rectangleOnRectangle : function(one, two)
 	{
 		shapeOne = one.collisionShape;
@@ -77,6 +86,9 @@ var Collision =
 			r1.y2 < r2.y1 );
 	},
 
+	/**
+	* I don't give a TENTH OF A SHIT ABOUT THIS YET
+	*/
 	polygonOnPolygon : function(one, two)
 	{
 		// not implemented

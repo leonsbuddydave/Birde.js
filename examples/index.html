@@ -91,13 +91,7 @@
 			B.Start();
 		}
 
-		if (document.addEventListener) {
-			document.addEventListener("DOMContentLoaded", load, false);
-		}
-		else
-		{
-			window.onload = load;
-		}
+		document.addEventListener("DOMContentLoaded", load, false);
 		</script>
 	</head>
 	<body>

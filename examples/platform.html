@@ -38,16 +38,8 @@
 			{
 				if (this.falling)
 				{
-					this.move({
-						x : 0,
-						y : 800
-					});
+					this.moveToCollision(800, 90);
 				}
-			})
-			.collision(function(actor)
-			{
-				B(this).attr("falling", false);
-				this.backpedal();
 			})
 			.keydown(function(ev)
 			{
@@ -74,12 +66,7 @@
 			{
 				d.DrawBounds(this);
 			})
-			.collision(function(actor)
-			{
-
-			});
-
-
+			.collision();
 
 			B.ToggleFullScreen();
 			B.Start();

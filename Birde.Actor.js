@@ -55,15 +55,48 @@ Actor.prototype.isBoundTo = function(binding)
 /**
 * Moves this object based on the provided delta object.
 */
-Actor.prototype.move = function(dir)
+Actor.prototype.move = function(speed, angle)
 {
 	this.backupCoords();
-	
-	var x = dir.x * Tick;
-	var y = dir.y * Tick;
+
+	var x, y;
+
+	x = Math.cos( BMath.degToRad(angle) ) * speed * Tick;
+	y = Math.sin( BMath.degToRad(angle) ) * speed * Tick;
 
 	this.x += x;
 	this.y += y;
+
+	return this;
+}
+
+/**
+* Moves the object until a collision occurs
+*/
+Actor.prototype.moveToCollision = function(speed, angle, accuracy)
+{
+	// default accuracy depth
+	// number of times this will be called max
+	// 2 should be enough for _most_ cases
+	accuracy = accuracy || 2; 
+
+	this.backupCoords();
+
+	var x, y;
+
+	x = Math.cos( BMath.degToRad(angle) ) * speed * Tick;
+	y = Math.sin( BMath.degToRad(angle) ) * speed * Tick;
+
+	this.predictCollision(new Shape.Point(x, y));
+
+	if (this.collision_inevitable && accuracy--)
+	{
+		this.moveToCollision(speed >> 1, angle, accuracy);
+	}
+	else
+	{
+		this.move(speed, angle);
+	}
 
 	return this;
 }
@@ -117,7 +150,7 @@ Actor.prototype.backpedal = function()
 * Will try to predict if the given actor will undergo a collision
 * soon, given a new position
 */
-Actor.prototype.predictCollision = function(optional_actorid, pointNewPosition)
+Actor.prototype.predictCollision = function(vector)
 {
 	/*
 	* Not implemented yet:
@@ -125,6 +158,34 @@ Actor.prototype.predictCollision = function(optional_actorid, pointNewPosition)
 	* bind it to the collision event temporarily and force a collision check
 	* return the result
 	*/
+
+	this.x += vector.x;
+	this.y += vector.y;
+
+	this.collision_inevitable = false;
+
+	(function(r)
+	{
+		B(r).collision(function()
+		{	
+			r.collisionPredictionResponse.call(r);
+		});
+	})(this);
+
+	Collision.step();
+
+	B(this).unbind("collision");
+
+	this.x -= vector.x;
+	this.y -= vector.y;
+
+	return this.collision_inevitable;
+}
+
+Actor.prototype.collisionPredictionResponse = function()
+{
+	// collision probably
+	this.collision_inevitable = true;
 }
 
 Actor.prototype.predictCollisionWith = function(actorid)
@@ -133,7 +194,6 @@ Actor.prototype.predictCollisionWith = function(actorid)
 	// but that may result in some serious undefined behavior
 	if (typeof actorid == 'undefined')
 		return false;
-
-
-
+	// else
+	
 }
