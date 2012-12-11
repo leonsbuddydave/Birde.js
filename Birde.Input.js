@@ -1,3 +1,7 @@
+var MOUSE_LEFT = 0;
+var MOUSE_WHEEL = 1;
+var MOUSE_RIGHT = 2;
+
 /**
 * Monitors events related to keyboard and mouse input. Internally stores the state of keys and mouse buttons, as well.
 * Is also tasked with delegating these events each step.
@@ -29,7 +33,7 @@ var Input =
 	init : function(props)
 	{
 		// Register mouse events
-		props.Canvas.onmousemove = function(e)
+		Drawing.Canvas.addEventListener("mousemove", function(e)
 		{
 			var Mouse = Input.Mouse;
 			Mouse.lastX = Mouse.x;
@@ -38,7 +42,22 @@ var Input =
 			Mouse.y = e.offsetY;
 			Mouse.deltaX = Mouse.x - Mouse.lastX;
 			Mouse.deltaY = Mouse.y - Mouse.lastY;
-		}
+		});
+
+		Drawing.Canvas.addEventListener("mousedown", function(e)
+		{
+			FireMouseEvent("mousedown", e);
+		});
+
+		Drawing.Canvas.addEventListener("mouseup", function(e)
+		{
+			FireMouseEvent("mouseup", e);
+		});
+
+		Drawing.Canvas.addEventListener("click", function(e)
+		{
+			FireMouseEvent("click", e);
+		});
 
 		// Initialize keystates
 		var i = 0;
@@ -107,7 +126,9 @@ var Input =
 	*/
 	step : function(dt)
 	{
-
+		/**
+		* Fires keydown events
+		*/
 		var keysDown = this.getAllKeysDown();
 		var i = 0;
 		while (i < keysDown.length)

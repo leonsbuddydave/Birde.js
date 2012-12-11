@@ -6,30 +6,6 @@
 var Shape =
 {
 	/**
-	* 
-	*/
-	Point : function(x, y)
-	{
-		this[0] = x;
-		this[1] = y;
-
-		this.x = this[0];
-		this.y = this[1];
-
-		this.setX = function(x)
-		{
-			this.x = x;
-			this[0] = x;
-		}
-
-		this.setY = function(y)
-		{
-			this.y = y;
-			this[1] = y;
-		}
-	},
-
-	/**
 	* Vague definition for a polygon of any number of points.
 	*/
 	Polygon : function()
@@ -66,5 +42,3 @@ var Shape =
 		this.centerPoint = new Point(radius, radius);
 	}
 }
-
-Shape.Point.prototype = new Array();

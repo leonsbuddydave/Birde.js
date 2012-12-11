@@ -1,3 +1,10 @@
+/**
+* This is where madness returns. This is a loose prototype of a small compiler
+* designed to concatenate Event functions without compromising their scope.
+* Dedicated to Logan Meers - may its source be printed on his tombstone.
+*
+* None of this is currently documented, in an attempt to protect the innocent.
+*/
 var Compiler = function()
 {
 	this.functions = [];

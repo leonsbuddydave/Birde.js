@@ -8,6 +8,9 @@ var EventRegistry =
 	keydown : [],
 	keyup : [],
 	keypress : [],
+	click : [],
+	mousedown : [],
+	mouseup : [],
 	contentloadupdate : [],
 	contentload : [],
 	collision : []
@@ -39,7 +42,35 @@ var FireEventOnActor = function(event, index)
 	a.response.call(a.target, arguments[2]);
 }
 
+/**
+* Fires a mouse event for all relevant objects
+*/
+var FireMouseEvent = function(eventName, e)
+{
+	var evt = new Event({
+		mouseButton : e.button
+	});
+
+	var mousePoint = new Point(Input.Mouse.x, Input.Mouse.y);
+
+	var Bound = EventRegistry[eventName];
+
+	var i = 0;
+	while (i < Bound.length)
+	{
+		if ( Collision.containsPoint( Bound[i].target, mousePoint ) )
+		{
+			FireEventOnActor( eventName, i, evt );
+		}
+		i++;
+	}
+}
+
+/**
+* Birde Event Object
+*/
 function Event(overrides)
 {
 	this.keyCode = overrides.keyCode || 0;
+	this.mouseButton = overrides.button || 0;
 }

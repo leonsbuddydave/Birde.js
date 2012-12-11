@@ -87,7 +87,7 @@ Actor.prototype.moveToCollision = function(speed, angle, accuracy)
 	x = Math.cos( BMath.degToRad(angle) ) * speed * Tick;
 	y = Math.sin( BMath.degToRad(angle) ) * speed * Tick;
 
-	this.predictCollision(new Shape.Point(x, y));
+	this.predictCollision(new Point(x, y));
 
 	if (this.collision_inevitable && accuracy--)
 	{
@@ -152,13 +152,11 @@ Actor.prototype.backpedal = function()
 */
 Actor.prototype.predictCollision = function(vector)
 {
-	/*
-	* Not implemented yet:
-	* Create a dummy actor that sports only a bounding box and x/y
-	* bind it to the collision event temporarily and force a collision check
-	* return the result
+	/**
+	* Something to keep in mind - the conclusion of this method unbinds ALL
+	* collision events tied to the actor. Probably an unwanted side-effect.
+	* We need a better way to unbind things OR a better way to predict collisions.
 	*/
-
 	this.x += vector.x;
 	this.y += vector.y;
 
@@ -182,6 +180,11 @@ Actor.prototype.predictCollision = function(vector)
 	return this.collision_inevitable;
 }
 
+/**
+* There's probably a much better way to do this with closures, but it's 6AM.
+* So in the meantime, this is here to act as a response target for the temporary
+* collision event registered by Actor.prototype.predictCollision
+*/
 Actor.prototype.collisionPredictionResponse = function()
 {
 	// collision probably

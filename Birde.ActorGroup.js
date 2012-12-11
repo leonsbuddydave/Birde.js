@@ -481,6 +481,7 @@ ActorGroup.prototype.removeClass = function(c)
 // Nothing much down here is going to be engaging or useful in any meaningful way
 //////////////////////////////////////////////////////////////////////
 
+
 ActorGroup.prototype.step = function(callback)
 {
 	return this.bind("step", callback);
@@ -504,6 +505,21 @@ ActorGroup.prototype.keyup = function(callback)
 ActorGroup.prototype.keypress = function(callback)
 {
 	return this.bind("keypress", callback);
+}
+
+ActorGroup.prototype.click = function(callback)
+{
+	return this.bind("click", callback);
+}
+
+ActorGroup.prototype.mousedown = function(callback)
+{
+	return this.bind("mousedown", callback);
+}
+
+ActorGroup.prototype.mouseup = function(callback)
+{
+	return this.bind("mouseup", callback);
 }
 
 ActorGroup.prototype.collision = function(callback)

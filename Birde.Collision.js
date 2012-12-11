@@ -88,10 +88,83 @@ var Collision =
 
 	/**
 	* I don't give a TENTH OF A SHIT ABOUT THIS YET
+	* NOT A FUCKING TENTH
 	*/
 	polygonOnPolygon : function(one, two)
 	{
 		// not implemented
+		return false;
+	},
+
+
+	/**
+	* Checks to see if the provided point is inside this shape's collision box
+	*/
+	containsPoint : function(actor, point)
+	{
+		var shape = actor.collisionShape;
+
+		if (shape == null)
+			return false;
+
+		if (shape instanceof Shape.Rectangle)
+		{
+			return this.isPointInRectangle(actor, point);
+		}
+		else if (shape instanceof Shape.Circle)
+		{
+			return this.isPointInCircle(actor, point);
+		}
+		else if (shape instanceof Shape.Polygon)
+		{
+			return this.isPointInPolygon(actor, point);
+		}
+		else
+		{
+			// haha okay
+			return false;
+		}
+	},
+
+	/**
+	* Returns true if the provided point is inside the provided rectangle
+	*/
+	isPointInRectangle : function(actor, point)
+	{
+		var shape = actor.collisionShape;
+
+		if (shape == null)
+			return false;
+
+		var pos = actor.getScreenPos();
+		var r = new Shape.Rectangle( pos.x + shape.x1, pos.y + shape.y1, shape.w, shape.h );
+
+		return (r.x1 < point.x && r.x2 > point.x && r.y1 < point.y && r.y2 > point.y);
+	},
+
+	/**
+	* Returns true if the provided poitn is inside the provided circle
+	*/
+	isPointInCircle : function(actor, point)
+	{
+		var shape = actor.collisionShape;
+
+		if (shape == null)
+			return false;
+
+		var pos = actor.getScreenPos();
+
+		return ( BMath.distanceBetween( shape.centerPoint, point ) < shape.radius );
+	},
+
+	/**
+	* Returns true if the provided point is inside the provided polygon
+	*/
+	isShapeInPolygon : function(actor, point)
+	{
+		/**
+		* Not implemented yet
+		*/
 		return false;
 	}
 }
