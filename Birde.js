@@ -27,14 +27,14 @@ window.requestAnimFrame = (function(){
 		if (selector instanceof Actor)
 			return new ActorGroup(selector);
 
-		return Birde.Select(selector);
+		return Birde.select(selector);
 	}
 
 	/**
 	* Initializes all the game systems, has both optional and required properties.
 	* Canvas : id of the target canvas
 	*/
-	Birde.Init = function(props)
+	Birde.init = function(props)
 	{
 		console.log("Initializing.");
 		return Birde.fn.init(props);
@@ -43,7 +43,7 @@ window.requestAnimFrame = (function(){
 	/**
 	* Launches the game loop if Birde.Init has already been called, otherwise does nothing.
 	*/
-	Birde.Start = function()
+	Birde.start = function()
 	{
 		if (this.Initialized)
 			return new Birde.fn.step(0);
@@ -54,7 +54,7 @@ window.requestAnimFrame = (function(){
 	/**
 	* Toggles canvas filling the whole visible body. (not fullscreen in the conventional sense)
 	*/
-	Birde.ToggleFullScreen = function()
+	Birde.toggleFullScreen = function()
 	{
 		Drawing.ToggleFullscreen();
 	}
@@ -62,7 +62,7 @@ window.requestAnimFrame = (function(){
 	/**
 	* Start of advanced selector engine
 	*/
-	Birde.Select = function(selector)
+	Birde.select = function(selector)
 	{
 		selector = selector || "*";
 		// also testing some shit
@@ -83,13 +83,14 @@ window.requestAnimFrame = (function(){
 	////////////////////////////////////////////////////////
 	w.Tick = 15;
 	Birde.Initialized = false;
+	Birde.Debug = true;
 	var lastFrameTime = 0;
 
 	var Defaults =
 	{
-		ClearColor : "#ccc",
-		Canvas : null,
-		Context : null
+		clearColor : "#ccc",
+		canvas : null,
+		context : null
 	}
 
 	/**
@@ -152,7 +153,7 @@ window.requestAnimFrame = (function(){
 	/**
 	* Top level alias for Scene.Add - used specifically for adding elements to the active scene.
 	*/
-	Birde.Add = function(actor)
+	Birde.add = function(actor)
 	{
 		return this.Scene.Add(actor);
 	}
@@ -176,8 +177,22 @@ window.requestAnimFrame = (function(){
 	}
 
 	/**
+	* Shim log method used for debugging
+	*/
+	Birde.log = function()
+	{
+		if (Birde.Debug)
+		{
+			for (var key in arguments)
+			{
+				console.log(arguments[key]);
+			}
+		}
+	}
+
+	/**
 	* Attach Birde and B to the window object - long form and an alias, for the world to see.
 	*/
-	w.B = w.Birde = Birde;
+	w.b = w.B = w.Birde = Birde;
 	
 })(window);

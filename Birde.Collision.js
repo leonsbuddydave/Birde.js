@@ -54,10 +54,16 @@ var Collision =
 
 	/**
 	* Check out if some hot circle-on-circle action is going on
+	* This method is as-of-yet untested, so, fuck it.
 	*/
 	circleOnCircle : function(one, two)
 	{
-		// implemented, untested though
+		if (!(one instanceof Actor) || !(two instanceof Actor))
+		{
+			b.log("Birde.Collision.js : Collision.circleOnCircle : Invalid argument.");
+			return false;
+		}
+
 		shapeOne = one.collisionShape;
 		shapeTwo = two.collisionShape;
 
@@ -69,6 +75,12 @@ var Collision =
 	*/
 	rectangleOnRectangle : function(one, two)
 	{
+		if (!(one instanceof Actor) || !(two instanceof Actor))
+		{
+			b.log("Birde.Collision.js : Collision.rectangleOnRectangle : Invalid argument.");
+			return false;
+		}
+
 		shapeOne = one.collisionShape;
 		shapeTwo = two.collisionShape;
 
@@ -89,10 +101,11 @@ var Collision =
 	/**
 	* I don't give a TENTH OF A SHIT ABOUT THIS YET
 	* NOT A FUCKING TENTH
+	* SHIT
 	*/
 	polygonOnPolygon : function(one, two)
 	{
-		// not implemented
+		b.log("Birde.Collision.js : Collision.polygonOnPolygon : Not implemented.");
 		return false;
 	},
 
@@ -102,6 +115,12 @@ var Collision =
 	*/
 	containsPoint : function(actor, point)
 	{
+		if (! (actor instanceof Actor) || ! (point instanceof Point))
+		{
+			b.log("Birde.Collision.js : Collision.containsPoint : Invalid argument.");
+			return false;
+		}
+
 		var shape = actor.collisionShape;
 
 		if (shape == null)
@@ -131,6 +150,12 @@ var Collision =
 	*/
 	isPointInRectangle : function(actor, point)
 	{
+		if (! (actor instanceof Actor) || ! (point instanceof Point))
+		{
+			b.log("Birde.Collision.js : Collision.isPointInRectangle : Invalid argument.");
+			return false;
+		}
+
 		var shape = actor.collisionShape;
 
 		if (shape == null)
@@ -147,6 +172,12 @@ var Collision =
 	*/
 	isPointInCircle : function(actor, point)
 	{
+		if (! (actor instanceof Actor) || ! (point instanceof Point))
+		{
+			b.log("Birde.Collision.js : Collision.isPointInCircle : Invalid argument.");
+			return false;
+		}
+
 		var shape = actor.collisionShape;
 
 		if (shape == null)
@@ -160,11 +191,14 @@ var Collision =
 	/**
 	* Returns true if the provided point is inside the provided polygon
 	*/
-	isShapeInPolygon : function(actor, point)
+	isPointInPolygon : function(actor, point)
 	{
 		/**
 		* Not implemented yet
 		*/
+
+		b.log("Birde.Collision.js : Collision.isPointInPolygon : Not implemented.");
+
 		return false;
 	}
 }

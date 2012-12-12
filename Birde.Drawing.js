@@ -5,15 +5,15 @@
 var Drawing =
 {
 	/**
-	* Initializes the drawing area and stores some useful information about it - Width, Height, ClearColor, etc.
+	* Initializes the drawing area and stores some useful information about it - Width, Height, clearColor, etc.
 	*/
 	init : function(props)
 	{
-		this.Canvas = document.getElementById( props.Canvas );
-		this.Context = props.Context = this.Canvas.getContext('2d');
-		this.ClearColor = props.ClearColor;
-		this.Width = this.Canvas.width;
-		this.Height = this.Canvas.height;
+		this.canvas = document.getElementById( props.canvas );
+		this.context = props.context = this.canvas.getContext('2d');
+		this.clearColor = props.clearColor;
+		this.Width = this.canvas.width;
+		this.Height = this.canvas.height;
 
 		this.StartSettings.Width = this.Width;
 		this.StartSettings.Height = this.Height;
@@ -39,9 +39,9 @@ var Drawing =
 		}
 	},
 
-	Canvas : null,
-	Context : null,
-	ClearColor : "#fff",
+	canvas : null,
+	context : null,
+	clearColor : "#fff",
 	Width : 0,
 	Height : 0,
 	isFullscreen : false,
@@ -50,7 +50,7 @@ var Drawing =
 
 	step : function()
 	{
-		this.Clear();
+		this.clear();
 
 		this.Cache.updateIfInvalid();
 
@@ -64,27 +64,68 @@ var Drawing =
 	},
 
 	/**
-	* Clears the visible canvas with the stored ClearColor.
+	* clears the visible canvas with the stored clearColor.
 	*/
-	Clear : function()
+	clear : function()
 	{
-		this.Context.fillStyle = this.ClearColor;
-		this.Context.fillRect(0, 0, this.Width, this.Height);
-		this.Context.fill();
+		this.context.fillStyle = this.clearColor;
+		this.context.fillRect(0, 0, this.Width, this.Height);
+		this.context.fill();
 	},
 
 	/**
 	* Draws the default collision boundaries for an object using its x, y, w and h properties.
 	* Currently does NOT support drawing custom collision polygons generated at runtime.
 	*/
-	DrawBounds : function(actor)
+	drawBounds : function(actor)
 	{
-		this.Context.fillStyle = actor.color || "#f00";
+		this.context.fillStyle = actor.color || "#f00";
 
 		var pos = actor.getScreenPos();
 
-		this.Context.fillRect(~~(pos.x + 0.5), ~~(pos.y + 0.5), actor.w, actor.h);
-		this.Context.fill();
+		this.context.fillRect(pos.x, pos.y, actor.w, actor.h);
+		this.context.fill();
+	},
+
+	/**
+	* Draws a given actor's collision boundaries
+	*/
+	drawCollisionBounds : function(actor)
+	{
+		if (!(actor instanceof Actor))
+		{
+			b.log("Birde.Drawing.js : Drawing.DrawCollisionBounds : Invalid argument.");
+			return;
+		}
+
+		var pos = actor.getScreenPos();
+		var shape = actor.collisionShape;
+
+		if (shape == null)
+			return;
+
+		this.context.strokeStyle = actor.color || "#00f";
+
+		if (shape instanceof Shape.Rectangle)
+		{
+			this.context.strokeRect( pos.x + shape.x1, pos.y + shape.y1, shape.w, shape.h);
+			//this.context.fill();
+		}
+		else if (shape instanceof Shape.Circle)
+		{
+			this.context.beginPath();
+			this.context.arc( pos.x + shape.centerPoint.x, pos.y + shape.centerPoint.y, shape.radius, 0, Math.PI * 2, false );
+			this.context.closePath();
+			this.context.stroke();
+		}
+		else if (shape instanceof Shape.Polygon)
+		{
+			// not implemented yet
+		}
+		else
+		{
+			// why
+		}
 	},
 
 	/**
@@ -112,20 +153,20 @@ var Drawing =
 			this.StartSettings.Width = this.Width;
 			this.StartSettings.Height = this.Height;
 
-			this.Canvas.style.position = "absolute";
-			this.Canvas.style.top = "0";
-			this.Canvas.style.left = "0";
-			this.Canvas.width = newWidth;
-			this.Canvas.height = newHeight;
-			this.Width = this.Canvas.width;
-			this.Height = this.Canvas.height;
+			this.canvas.style.position = "absolute";
+			this.canvas.style.top = "0";
+			this.canvas.style.left = "0";
+			this.canvas.width = newWidth;
+			this.canvas.height = newHeight;
+			this.Width = this.canvas.width;
+			this.Height = this.canvas.height;
 		}
 		else
 		{
-			this.Canvas.width = this.StartSettings.Width;
-			this.Canvas.height = this.StartSettings.Height;
-			this.Width = this.Canvas.width;
-			this.Height = this.Canvas.height;
+			this.canvas.width = this.StartSettings.Width;
+			this.canvas.height = this.StartSettings.Height;
+			this.Width = this.canvas.width;
+			this.Height = this.canvas.height;
 		}
 
 		this.isFullscreen = !this.isFullscreen;

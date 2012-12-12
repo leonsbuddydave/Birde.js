@@ -18,11 +18,11 @@
 		<script type="text/javascript">
 		var load = function()
 		{
-			Birde.Init({
-				Canvas : "targetCanvas"
+			b.init({
+				canvas : "targetCanvas"
 			});
 
-			B.Add(new Actor("player",
+			b.add(new Actor("player",
 			{
 				x : 100,
 				y : 100,
@@ -31,7 +31,8 @@
 			}))
 			.draw(function(d)
 			{
-				d.DrawBounds(this);
+				d.drawBounds(this);
+				d.drawCollisionBounds(this);
 			})
 			.keyMovement(1000, {
 				37 : 180,
@@ -40,7 +41,7 @@
 				40 : 90
 			});
 
-			B.Add(new Actor("floor",
+			b.add(new Actor("floor",
 			{
 				x : 10,
 				y : 400,
@@ -50,7 +51,8 @@
 			}))
 			.draw(function(d)
 			{
-				d.DrawBounds(this);
+				d.drawBounds(this);
+				d.drawCollisionBounds(this);
 			})
 			.collision()
 			.mousedown(function(ev)
@@ -63,8 +65,29 @@
 				this.y -= 20;
 			});
 
-			B.ToggleFullScreen();
-			B.Start();
+			/*
+			b.add(new Actor("ball", {
+				x : 200,
+				y : 100,
+				w : 50,
+				h : 50
+			}))
+			.setCollisionShape(new Shape.Circle(30))
+			.draw(function(d)
+			{
+				d.drawBounds(this);
+				d.drawCollisionBounds(this);
+			})
+			.keyMovement(1000, {
+				37 : 180,
+				38 : 270,
+				39 : 0,
+				40 : 90
+			});
+			*/
+
+			b.toggleFullScreen();
+			b.start();
 		}
 
 		document.addEventListener("DOMContentLoaded", load, false);

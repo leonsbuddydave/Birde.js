@@ -33,7 +33,7 @@ var Input =
 	init : function(props)
 	{
 		// Register mouse events
-		Drawing.Canvas.addEventListener("mousemove", function(e)
+		Drawing.canvas.addEventListener("mousemove", function(e)
 		{
 			var Mouse = Input.Mouse;
 			Mouse.lastX = Mouse.x;
@@ -44,17 +44,17 @@ var Input =
 			Mouse.deltaY = Mouse.y - Mouse.lastY;
 		});
 
-		Drawing.Canvas.addEventListener("mousedown", function(e)
+		Drawing.canvas.addEventListener("mousedown", function(e)
 		{
 			FireMouseEvent("mousedown", e);
 		});
 
-		Drawing.Canvas.addEventListener("mouseup", function(e)
+		Drawing.canvas.addEventListener("mouseup", function(e)
 		{
 			FireMouseEvent("mouseup", e);
 		});
 
-		Drawing.Canvas.addEventListener("click", function(e)
+		Drawing.canvas.addEventListener("click", function(e)
 		{
 			FireMouseEvent("click", e);
 		});

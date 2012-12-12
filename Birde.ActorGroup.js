@@ -72,8 +72,16 @@ ActorGroup.prototype.attr = function()
 /**
 * Binds an ActorGroup to receive a given event /and subevent.
 */
-ActorGroup.prototype.bind = function(event, response)
+ActorGroup.prototype.bind = function(event, response, binder)
 {
+	// Binder indicates who bound the event - "birde" if it was bound by the system, 
+	// "user" otherwise
+	// this lets the user and Birde use the same event registry without collision
+	// in most cases the user shouldn't override this
+	// unless I find another way it could be useful
+
+	binder = binder || "user";
+
 	var events = event.split(' ');
 	response = response || function(){};
 
@@ -89,7 +97,8 @@ ActorGroup.prototype.bind = function(event, response)
 		{
 			EventRegistry[ev].push({
 				target : e,
-				response : response
+				response : response,
+				boundBy : binder
 			});
 		});
 
@@ -124,8 +133,9 @@ ActorGroup.prototype.unbindAll = function()
 /**
 * Removes the Actors' bindings to a particular event or set of events
 */
-ActorGroup.prototype.unbind = function(event)
+ActorGroup.prototype.unbind = function(event, binder)
 {
+	binder = binder || "user";
 	var events = event.split(' ');
 	var i = 0;
 	while (i < this.length)
@@ -133,7 +143,7 @@ ActorGroup.prototype.unbind = function(event)
 		var j = EventRegistry[event].length;
 		while (j--)
 		{
-			if (EventRegistry[event][j].target.id == this[i].id)
+			if (EventRegistry[event][j].target.id == this[i].id && EventRegistry[event][j].boundBy == binder)
 			{
 				EventRegistry[event].splice(j, 1);
 			}
@@ -474,6 +484,14 @@ ActorGroup.prototype.removeClass = function(c)
 	}
 
 	return this;
+}
+
+/**
+* Returns the actor at the given index
+*/
+ActorGroup.prototype.get = function(i)
+{
+	return this[i];
 }
 
 //////////////////////////////////////////////////////////////////////

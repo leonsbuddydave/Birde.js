@@ -15,10 +15,6 @@ var Actor = function(id, props)
 
 		class : [],
 
-		// maintains a list of all the bindings this Actor is registered for
-		// NOT IMPLEMENTED YET
-		bindings : [],
-
 		// all actors have no parent by default
 		parent : null,
 	});
@@ -46,9 +42,21 @@ Actor.prototype.hasClass = function(c)
 /**
 * Returns true if this actor is bound to the requested event
 */
-Actor.prototype.isBoundTo = function(binding)
+Actor.prototype.isBoundTo = function(event, binder)
 {
-	// Not implemented yet
+	binder = binder || "user";
+	var evlist = EventRegistry[event];
+
+	var i = 0;
+	while (i < evlist.length)
+	{
+		if ( evlist[i].target.id == this.id && evlist[i].boundBy == binder)
+		{
+			return true;
+		}
+		i++;
+	}
+
 	return false;
 }
 
@@ -73,13 +81,8 @@ Actor.prototype.move = function(speed, angle)
 /**
 * Moves the object until a collision occurs
 */
-Actor.prototype.moveToCollision = function(speed, angle, accuracy)
+Actor.prototype.moveToCollision = function(speed, angle)
 {
-	// default accuracy depth
-	// number of times this will be called max
-	// 2 should be enough for _most_ cases
-	accuracy = accuracy || 2; 
-
 	this.backupCoords();
 
 	var x, y;
@@ -87,11 +90,11 @@ Actor.prototype.moveToCollision = function(speed, angle, accuracy)
 	x = Math.cos( BMath.degToRad(angle) ) * speed * Tick;
 	y = Math.sin( BMath.degToRad(angle) ) * speed * Tick;
 
-	this.predictCollision(new Point(x, y));
+	this.predictCollision( new Point(x, y) );
 
-	if (this.collision_inevitable && accuracy--)
+	if (this.collision_inevitable && speed > 0 )
 	{
-		this.moveToCollision(speed >> 1, angle, accuracy);
+		this.moveToCollision(speed - 1, angle);
 	}
 	else
 	{
@@ -152,11 +155,12 @@ Actor.prototype.backpedal = function()
 */
 Actor.prototype.predictCollision = function(vector)
 {
-	/**
-	* Something to keep in mind - the conclusion of this method unbinds ALL
-	* collision events tied to the actor. Probably an unwanted side-effect.
-	* We need a better way to unbind things OR a better way to predict collisions.
-	*/
+	if (this.isBoundTo("collision", "birde"))
+	{
+		b.log("Already bound and checking.");
+		return false;
+	}
+
 	this.x += vector.x;
 	this.y += vector.y;
 
@@ -164,31 +168,20 @@ Actor.prototype.predictCollision = function(vector)
 
 	(function(r)
 	{
-		B(r).collision(function()
+		B(r).bind("collision", function()
 		{	
-			r.collisionPredictionResponse.call(r);
-		});
+			r.collision_inevitable = true;
+		}, "birde");
 	})(this);
 
 	Collision.step();
 
-	B(this).unbind("collision");
+	B(this).unbind("collision", "birde");
 
 	this.x -= vector.x;
 	this.y -= vector.y;
 
 	return this.collision_inevitable;
-}
-
-/**
-* There's probably a much better way to do this with closures, but it's 6AM.
-* So in the meantime, this is here to act as a response target for the temporary
-* collision event registered by Actor.prototype.predictCollision
-*/
-Actor.prototype.collisionPredictionResponse = function()
-{
-	// collision probably
-	this.collision_inevitable = true;
 }
 
 Actor.prototype.predictCollisionWith = function(actorid)
