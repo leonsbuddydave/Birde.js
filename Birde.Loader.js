@@ -54,8 +54,10 @@ var MediaElement = function(filename, type, callback)
 	{
 		case "image":
 			this.element = new Image();
+			break
 		case "audio":
 			this.element = new Audio();
+			break;
 	}
 	
 	this.element.onload = this.callback;
