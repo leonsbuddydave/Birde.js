@@ -49,15 +49,15 @@ var MediaElement = function(filename, type, callback)
 	this.type = type;
 	this.callback = callback;
 	this.element;
-
-	if (this.type == "image")
+	
+	switch(this.type)
 	{
-		this.element = new Image();
-		this.element.onload = this.callback;
-		this.element.src = filename;
+		case "image":
+			this.element = new Image();
+		case "audio":
+			this.element = new Audio();
 	}
-	else if (this.type == "audio")
-	{
-
-	}
+	
+	this.element.onload = this.callback;
+	this.element.src = filename;
 }
