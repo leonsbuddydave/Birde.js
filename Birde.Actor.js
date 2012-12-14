@@ -12,10 +12,12 @@ var Actor = function(id, props)
 		y : 0,
 		w : 0,
 		h : 0,
-
+		rotation : 0,
 		class : [],
+		origin : new Point(0, 0),
 
 		// all actors have no parent by default
+		// how sad
 		parent : null,
 	});
 

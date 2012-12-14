@@ -30,8 +30,19 @@ var Collision =
 	*/
 	isColliding : function(one, two)
 	{
-		shapeOne = one.collisionShape;
-		shapeTwo = two.collisionShape;
+		if ( !(one instanceof Actor) || !(two instanceof Actor) )
+		{
+			b.log("Birde.Collision.js : Collision.isColliding : Invalid argument.");
+			return false;
+		}
+		else if (one === two)
+		{
+			// make sure we aren't comparing an actor against itself.
+			return false;
+		}
+
+		var shapeOne = one.collisionShape;
+		var shapeTwo = two.collisionShape;
 
 		if (shapeOne instanceof Shape.Rectangle && shapeTwo instanceof Shape.Rectangle)
 		{
@@ -45,9 +56,48 @@ var Collision =
 		{
 			return this.polygonOnPolygon(one, two);
 		}
+
+		/**
+		* These two are conditional flops of each other
+		*/
+		else if (shapeOne instanceof Shape.Circle && shapeTwo instanceof Shape.Rectangle)
+		{
+			return this.circleOnRectangle(one, two);
+		}
+		else if (shapeOne instanceof Shape.Rectangle && shapeTwo instanceof Shape.Circle)
+		{
+			return this.circleOnRectangle(two, one);
+		}
+
+
 		else
 		{
 			// what
+			return false;
+		}
+	},
+
+	/**
+	* Does circle-on-rectangle collisions if we need it
+	*/
+	circleOnRectangle : function(circleActor, rectangleActor)
+	{
+		if ( !(circleActor instanceof Actor) || !(rectangleActor instanceof Actor) )
+		{
+			b.log("Birde.Collision.js : Collision.circleOnRectangle : Invalid argument.");
+			return false;
+		}
+
+		var circle = circleActor.collisionShape;
+		var rectangle = rectangleActor.collisionShape;
+
+		var pos = circleActor.getScreenPos();
+		var testPoint = new Point( pos.x + circle.centerPoint.x, pos.y + circle.centerPoint.y );
+
+		if (this.isPointInRectangle( rectangleActor, testPoint ))
+			return true;
+		else
+		{
 			return false;
 		}
 	},
@@ -64,8 +114,8 @@ var Collision =
 			return false;
 		}
 
-		shapeOne = one.collisionShape;
-		shapeTwo = two.collisionShape;
+		var shapeOne = one.collisionShape;
+		var shapeTwo = two.collisionShape;
 
 		return (shapeOne.radius + shapeTwo.radius < BMath.distanceBetween( shapeOne.centerPoint, shapeTwo.centerPoint ) )
 	},
@@ -81,8 +131,8 @@ var Collision =
 			return false;
 		}
 
-		shapeOne = one.collisionShape;
-		shapeTwo = two.collisionShape;
+		var shapeOne = one.collisionShape;
+		var shapeTwo = two.collisionShape;
 
 		var posOne = one.getScreenPos();
 		var r1 = new Shape.Rectangle( posOne.x + shapeOne.x1, posOne.y + shapeOne.y1, shapeOne.w, shapeOne.h );

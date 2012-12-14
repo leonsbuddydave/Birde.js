@@ -64,8 +64,7 @@
 			{
 				this.y -= 20;
 			});
-
-			/*
+			
 			b.add(new Actor("ball", {
 				x : 200,
 				y : 100,
@@ -75,8 +74,11 @@
 			.setCollisionShape(new Shape.Circle(30))
 			.draw(function(d)
 			{
-				d.drawBounds(this);
 				d.drawCollisionBounds(this);
+			})
+			.collision(function()
+			{
+
 			})
 			.keyMovement(1000, {
 				37 : 180,
@@ -84,7 +86,6 @@
 				39 : 0,
 				40 : 90
 			});
-			*/
 
 			b.toggleFullScreen();
 			b.start();

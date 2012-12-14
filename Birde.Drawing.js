@@ -79,12 +79,12 @@ var Drawing =
 	*/
 	drawBounds : function(actor)
 	{
-		this.context.fillStyle = actor.color || "#f00";
-
 		var pos = actor.getScreenPos();
 
+		this.context.save();
+		this.context.fillStyle = actor.color || "#f00";
 		this.context.fillRect(pos.x, pos.y, actor.w, actor.h);
-		this.context.fill();
+		this.context.restore();
 	},
 
 	/**
@@ -99,24 +99,33 @@ var Drawing =
 		}
 
 		var pos = actor.getScreenPos();
+		var origin = actor.origin;
 		var shape = actor.collisionShape;
 
 		if (shape == null)
 			return;
 
+		this.context.save();
+
 		this.context.strokeStyle = actor.color || "#00f";
+		this.context.fillStyle = "";
+		this.context.lineWidth = 2;
+		this.context.translate( pos.x + origin.x, pos.y + origin.y );
+		this.context.rotate( BMath.degToRad( actor.rotation ) );
 
 		if (shape instanceof Shape.Rectangle)
 		{
-			this.context.strokeRect( pos.x + shape.x1, pos.y + shape.y1, shape.w, shape.h);
-			//this.context.fill();
+			this.context.beginPath();
+			this.context.strokeRect(shape.x1, shape.y1, shape.w, shape.h);
+			this.context.closePath();
 		}
 		else if (shape instanceof Shape.Circle)
 		{
 			this.context.beginPath();
-			this.context.arc( pos.x + shape.centerPoint.x, pos.y + shape.centerPoint.y, shape.radius, 0, Math.PI * 2, false );
+			this.context.arc( shape.centerPoint.x, shape.centerPoint.y, shape.radius, 0, BMath.TAU, false );
 			this.context.closePath();
 			this.context.stroke();
+			//this.context.fill();
 		}
 		else if (shape instanceof Shape.Polygon)
 		{
@@ -126,6 +135,8 @@ var Drawing =
 		{
 			// why
 		}
+
+		this.context.restore();
 	},
 
 	/**
